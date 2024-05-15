@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,6 +36,11 @@ public class User implements UserDetails {
     private String phone;
     @Column(name = "full_name")
     private String fullname;
+    @Column(name = "otp")
+    private String otp;
+
+    @Column(name = "otp_Expiry")
+    private LocalDateTime resetOtpExpiry;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

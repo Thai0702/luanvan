@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         req->req.requestMatchers("/api/authenticate/**","/**")
                                 .permitAll()
-                                .requestMatchers(ADMIN_ACCESS).hasAnyAuthority("ADMIN")
+                                .requestMatchers("/api-admin/**").hasAnyAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailsServiceImp)

@@ -1,9 +1,7 @@
 package com.luanvan.luanvan.securityService.controller;
 
 
-import com.luanvan.luanvan.securityService.model.AuthenticationResponse;
-import com.luanvan.luanvan.securityService.model.LoginRequest;
-import com.luanvan.luanvan.securityService.model.RegisterRequest;
+import com.luanvan.luanvan.securityService.model.*;
 import com.luanvan.luanvan.securityService.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +32,24 @@ public class AuthenticationController {
     public ResponseEntity<Integer>getUserIdByToken(@RequestHeader(value = "Authorization")String token){
         Integer id=authenticationService.getUserIdFromToken(token);
         return new ResponseEntity<Integer>(id,HttpStatus.OK);
+    }
+
+    @PostMapping("/api/authenticate/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        boolean result = authenticationService.handleForgotPassword(request.getUsername());
+        if (result) {
+            return ResponseEntity.ok("Kiểm tra OTP trong gmail.");
+        } else {
+            return new ResponseEntity<>("Không tìm thấy email.", HttpStatus.NOT_FOUND);
+        }
+    }
+    @PostMapping("/api/authenticate/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        boolean result = authenticationService.resetPassword(request.getUsername(), request.getOtp(), request.getNewPassword());
+        if (result) {
+            return ResponseEntity.ok("Success !");
+        } else {
+            return ResponseEntity.badRequest().body("Fail to change !");
+        }
     }
 }
