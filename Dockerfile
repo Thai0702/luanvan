@@ -3,6 +3,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/helo-0.0.1-SNAPSHOT.jar hello.jar
+COPY --from=build /target/luanvan-0.0.1-SNAPSHOT.jar luanvan.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","hello.jar"]
+ENTRYPOINT ["java","-jar","luanvan.jar"]
