@@ -54,7 +54,7 @@ public class SubjectClassController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @DeleteMapping("/api-gv/{id}")
+    @DeleteMapping("/api/class/api-gv/{id}")
     public ResponseEntity<String> deleteSubjectClassById(@PathVariable Integer id) {
         try {
             subjectClassService.deleteById(id);
