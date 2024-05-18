@@ -54,7 +54,4 @@ public class AccountController {
     public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
         return accountService.importAccoutFromExcel(classId,multipartFile);
     }
-
-
-
 }

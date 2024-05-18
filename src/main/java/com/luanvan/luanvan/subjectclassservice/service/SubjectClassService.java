@@ -39,11 +39,9 @@ public class SubjectClassService  {
         sc.setCreatedAt(timestamp);
         return subjectClassReponsitory.save(sc);
     }
-
     public void deleteById(Integer id) {
         subjectClassReponsitory.deleteById(id);
     }
-
 
     public SubjectClass updateSc(Integer id, SubjectClass subjectClass){
         SubjectClass sc = subjectClassReponsitory.findById(id).orElseThrow(() -> new EntityNotFoundException("Khong co lop hoc voi id:"+id));
@@ -57,11 +55,9 @@ public class SubjectClassService  {
         subjectClassReponsitory.save(sc);
         return sc;
     }
-
     public List<SubjectClass> getClassByCreatedBy(Integer userId) {
         return subjectClassReponsitory.findByCreatedBy(userId);
     }
-
     public List<SubjectClass> getSubjectClassesByStudentId(int studentId) {
         return subjectClassReponsitory.findByStudentId(studentId);
     }

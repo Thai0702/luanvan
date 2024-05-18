@@ -2,9 +2,14 @@ package com.luanvan.luanvan.securityService.service;
 
 
 
+import com.luanvan.luanvan.accountservice.model.Account;
 import com.luanvan.luanvan.accountservice.model.Role;
+import com.luanvan.luanvan.accountservice.repository.AccountRepository;
+import com.luanvan.luanvan.groupService.model.Student;
+import com.luanvan.luanvan.groupService.repository.StudentRepository;
 import com.luanvan.luanvan.securityService.entity.User;
 import com.luanvan.luanvan.securityService.model.AuthenticationResponse;
+import com.luanvan.luanvan.securityService.model.ChangePasswordRequest;
 import com.luanvan.luanvan.securityService.model.LoginRequest;
 import com.luanvan.luanvan.securityService.model.RegisterRequest;
 import com.luanvan.luanvan.securityService.repository.UserRepository;
@@ -20,7 +25,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
-import java.util.UUID;
 
 
 @Service
@@ -30,6 +34,10 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
 
     public AuthenticationService(UserRepository userRepo, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
@@ -150,6 +158,37 @@ public class AuthenticationService {
         }
         return  false;
     }
+    public Role getUserRole(String token){
+        String username=jwtService.extractUsername(token.substring(7));
+        var user=userRepo.findByUsername(username);
+        if(user.isPresent()){
+            return user.get().getRole();
+        }
+        return null;
+    }
+//    public boolean checkExistStudentId(Student request) {
+//        if(studentRepository.existsByClassIdAndStudentId(request.getClassId(),request.getStudentId())){
+//            return true;
+//        }
+//        return false;
+//    }
+    // change password
+public boolean changePassword(int accountId, ChangePasswordRequest changePasswordRequest) {
+    Optional<Account> accountOpt = accountRepository.findById(accountId);
+
+    if (accountOpt.isPresent()) {
+        Account account = accountOpt.get();
+
+        if (passwordEncoder.matches(changePasswordRequest.getOldPassword(), account.getPassword())) {
+            account.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+            accountRepository.save(account);
+            return true;
+        } else {
+            return false; // Old password does not match
+        }
+    }
+    return false; // Account not found
+}
 
 
 }

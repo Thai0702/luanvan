@@ -36,6 +36,8 @@ public class SubjectClass {
 
     @Column(name="group_register_method")
     private String groupRegisterMethod;
+    @Column(name="invitecode")
+    private String inviteCode;
 
 
 }

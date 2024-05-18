@@ -2,11 +2,14 @@ package com.luanvan.luanvan.groupService.controller;
 
 
 
+import com.luanvan.luanvan.accountservice.model.Account;
 import com.luanvan.luanvan.groupService.model.Group;
+import com.luanvan.luanvan.groupService.model.Student;
 import com.luanvan.luanvan.groupService.service.GroupService;
 import com.luanvan.luanvan.groupService.wrapper.GroupInfo;
 import com.luanvan.luanvan.groupService.wrapper.GroupMemberInfo;
 import com.luanvan.luanvan.groupService.wrapper.MemberInfo;
+import com.luanvan.luanvan.securityService.model.RegisterRequest;
 import com.luanvan.luanvan.securityService.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -118,4 +121,17 @@ public class GroupController {
     public ResponseEntity<?>getSortedByGroupList(@PathVariable Integer classId){
         return new ResponseEntity<List<GroupMemberInfo>>(groupService.findSortedByGroup(classId),HttpStatus.OK);
     }
+//    // join class
+//    @PostMapping("/api/join-class/{inviteCode}/form?password=")
+//    public ResponseEntity<?>joinClassByInviteCode(@RequestHeader(value = "Authorization")String token,@PathVariable String inviteCode){
+//        int accountId=authenticationService.getUserIdFromToken(token);
+//        return groupService.joinClassByInviteCode(inviteCode,accountId);
+//    }
+@PostMapping("/api/join-class/{inviteCode}/form")
+public ResponseEntity<?> joinClassByInviteCode(
+        @RequestHeader(value = "Authorization") String token,
+        @PathVariable String inviteCode) {
+    int accountId = authenticationService.getUserIdFromToken(token);
+    return groupService.joinClassByInviteCode(inviteCode, accountId);
+}
 }

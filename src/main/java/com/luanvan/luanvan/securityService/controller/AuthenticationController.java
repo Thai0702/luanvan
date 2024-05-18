@@ -52,4 +52,20 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body("Fail to change !");
         }
     }
+    // change password
+    @PostMapping("/api/authenticate/change-password")
+    public ResponseEntity<String> changePassword(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestBody ChangePasswordRequest changePasswordRequest) {
+        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmNewPassword())) {
+            return new ResponseEntity<>("New password and confirm password do not match", HttpStatus.BAD_REQUEST);
+        }
+        int accountId = authenticationService.getUserIdFromToken(token);
+        boolean isChanged = authenticationService.changePassword(accountId, changePasswordRequest);
+        if (isChanged) {
+            return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to change password", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

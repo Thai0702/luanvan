@@ -2,6 +2,8 @@ package com.luanvan.luanvan.groupService.service;
 
 
 
+import com.luanvan.luanvan.accountservice.model.Account;
+import com.luanvan.luanvan.accountservice.repository.AccountRepository;
 import com.luanvan.luanvan.accountservice.service.AccountDetailService;
 import com.luanvan.luanvan.accountservice.wrapper.StudentAccountDetail;
 import com.luanvan.luanvan.groupService.model.Group;
@@ -13,13 +15,16 @@ import com.luanvan.luanvan.groupService.repository.StudentRepository;
 import com.luanvan.luanvan.groupService.wrapper.GroupInfo;
 import com.luanvan.luanvan.groupService.wrapper.GroupMemberInfo;
 import com.luanvan.luanvan.groupService.wrapper.MemberInfo;
+import com.luanvan.luanvan.securityService.model.RegisterRequest;
 import com.luanvan.luanvan.subjectclassservice.model.SubjectClass;
 import com.luanvan.luanvan.subjectclassservice.repository.SubjectClassReponsitory;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +40,7 @@ public class GroupService {
     private StudentRepository studentRepository;
     private SubjectClassReponsitory subjectClassReponsitory;
     private AccountDetailService accountDetailService;
+
 
     public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, StudentRepository studentRepository, SubjectClassReponsitory subjectClassReponsitory, AccountDetailService accountDetailService) {
         this.groupRepository = groupRepository;
@@ -191,6 +197,47 @@ public class GroupService {
             }
         }
         return resultList;
+    }
+//    // join class
+//    public ResponseEntity<?> joinClassByInviteCode(String inviteCode, int accountId, String password){
+//        Optional<SubjectClass> subjectClass=subjectClassReponsitory.findByInviteCode(inviteCode);
+//        if(subjectClass.isPresent()){
+//            Student student=new Student(subjectClass.get().getSubjectClassId(),accountId);
+//            return  new ResponseEntity<>(HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
+    @Autowired
+    private AccountRepository accountRepository;
+
+    public ResponseEntity<?> joinClassByInviteCode(@RequestParam String inviteCode, @RequestParam int accountId) {
+        Optional<SubjectClass> subjectClassOpt = subjectClassReponsitory.findByInviteCode(inviteCode);
+        if (subjectClassOpt.isPresent()) {
+            SubjectClass subjectClass = subjectClassOpt.get();
+            Optional<Account> accountOpt = accountRepository.findById(accountId);
+            if (accountOpt.isEmpty()) {
+                return new ResponseEntity<>("Account not found", HttpStatus.NOT_FOUND);
+            }
+            // Check if the account has already joined the class
+            boolean alreadyJoined = studentRepository.existsByClassIdAndStudentId(subjectClass.getSubjectClassId(), accountId);
+            if (alreadyJoined) {
+                return new ResponseEntity<>("Cannot join, account already in class", HttpStatus.BAD_REQUEST);
+            }
+            Student student = new Student(subjectClass.getSubjectClassId(), accountId);
+            studentRepository.save(student);  // Assumption: you have a repository for Student
+            return new ResponseEntity<>("Successfully joined the class" +" "+ accountId,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+//Tao invite CODE
+    public String createInviteCode() {
+        String source = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder output = new StringBuilder(5);//tao ra code co do dai la 5 ky tu VD:5x7Yg
+        for (int i = 0; i < 5; i++) {
+            int index = (int) (source.length() * Math.random());
+            output.append(source.charAt(index));
+        }
+        return output.toString();
     }
 
 }
