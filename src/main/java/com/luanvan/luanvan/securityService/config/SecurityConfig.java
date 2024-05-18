@@ -20,12 +20,12 @@ public class SecurityConfig {
     private final UserDetailsServiceImp userDetailsServiceImp;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     //Danh sach duong dan chi GV dc phep truy cap
-    private static final String[] GV_ACCESS={
-            "/api/class/"
+ private static final String[] GV_ACCESS={
+            "/api-gv/**"
     };
     //TUONG TU NHU TREN NHUNG LA ADMIN
     private static final String[] ADMIN_ACCESS={
-            "/api/admin/"
+            "/api-admin/**"
     };
 
     public SecurityConfig(UserDetailsServiceImp userDetailsServiceImp, JwtAuthenticationFilter jwtAuthenticationFilter) {
