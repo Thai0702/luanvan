@@ -33,14 +33,15 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-    @Bean
+        @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/api/authenticate/**","/**")
+                        req->req.requestMatchers("/api/authenticate/**")
                                 .permitAll()
-                                .requestMatchers("/api-admin/**").hasAnyAuthority("ADMIN")
+                                .requestMatchers(GV_ACCESS).hasAnyAuthority("GV","ADMIN")
+                                .requestMatchers(ADMIN_ACCESS).hasAnyAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailsServiceImp)
