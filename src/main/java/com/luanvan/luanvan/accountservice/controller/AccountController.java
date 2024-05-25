@@ -13,7 +13,7 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/account")
+@RequestMapping("/api-gv/account")
 public class AccountController {
     @Autowired
     AccountService accountService;
@@ -28,7 +28,7 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
     // xoa tai khoan
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteHAccountById(@PathVariable Integer id) {
         try {
             accountService.deleteById(id);
@@ -39,7 +39,7 @@ public class AccountController {
     }
 
     //sua tai khoan
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<String> updateAccount(@PathVariable Integer id, @RequestBody Account account) {
         try {
 
@@ -50,7 +50,7 @@ public class AccountController {
         }
     }
     // tao account bang file excel
-    @PostMapping("/class/{classId}/excel")
+    @PostMapping("/class/excel/{classId}")
     public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
         return accountService.importAccoutFromExcel(classId,multipartFile);
     }

@@ -82,8 +82,16 @@ public class GroupService {
         //groupRepository.updateGroupLeader(userId,classId,groupId);
         return new ResponseEntity<>("SUCCES", HttpStatus.OK);
     }
-
+    // kiem tra trung ten nhom
+    public boolean isGroupNameExists(String groupName, Integer classId) {
+        return groupRepository.existsByGroupNameAndClassId(groupName,classId);
+    }
     public ResponseEntity<String> createSingleGroup(GroupInfo groupInfo) {
+
+        // Kiểm tra xem tên nhóm đã tồn tại hay chưa
+        if (isGroupNameExists(groupInfo.getGroupName(),groupInfo.getClassId())) {
+            return new ResponseEntity<>("Group name already exists", HttpStatus.BAD_REQUEST);
+        }
         Group newGroup = new Group();
         newGroup.setGroupName(groupInfo.getGroupName());
         newGroup.setClassId(groupInfo.getClassId());
@@ -105,11 +113,18 @@ public class GroupService {
     public void deleteSVByClassIdAndStudentId(int classId, int studentId) {
         studentRepository.deleteByClassIdAndStudentId(classId, studentId);
     }
+    public void removeMemberFromGroup(int groupId, int memberId) {
+        groupMemberRepository.deleteByGroupIdAndMemberId(groupId, memberId);
+    }
 
     public ResponseEntity<String> addMemberIntoGroup(int classId, int groupId, int accountId) {
         GroupMember newMember = new GroupMember(groupId, accountId);
         groupMemberRepository.save(newMember);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    // kiểm tra join nhóm
+    public boolean isMemberAlreadyInGroup(int memberId, int groupId) {
+        return groupMemberRepository.existsByGroupIdAndMemberId(groupId, memberId);
     }
 
 
@@ -198,15 +213,21 @@ public class GroupService {
         }
         return resultList;
     }
-//    // join class
-//    public ResponseEntity<?> joinClassByInviteCode(String inviteCode, int accountId, String password){
-//        Optional<SubjectClass> subjectClass=subjectClassReponsitory.findByInviteCode(inviteCode);
-//        if(subjectClass.isPresent()){
-//            Student student=new Student(subjectClass.get().getSubjectClassId(),accountId);
-//            return  new ResponseEntity<>(HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
+    // New method to get students by group ID within a specific class
+    public List<GroupMemberInfo> findStudentsByGroupInClass(int classId, int groupId) {
+        List<GroupMemberInfo> resultList = new ArrayList<>();
+        Optional<Group> groupOpt = groupRepository.findByGroupIdAndClassId(groupId, classId);
+        if (groupOpt.isPresent()) {
+            Group group = groupOpt.get();
+            List<GroupMember> memberList = groupMemberRepository.findAllByGroupId(group.getGroupId());
+            for (GroupMember member : memberList) {
+                StudentAccountDetail memberDetail = accountDetailService.getStudentAccountDetail(member.getMemberId());
+                GroupMemberInfo memberInfo = new GroupMemberInfo(group.getGroupId(), group.getGroupName(), member.getMemberId(), memberDetail.getFullName(), memberDetail.getStudentId());
+                resultList.add(memberInfo);
+            }
+        }
+        return resultList;
+    }
     @Autowired
     private AccountRepository accountRepository;
 
@@ -229,6 +250,7 @@ public class GroupService {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 //Tao invite CODE
     public String createInviteCode() {
         String source = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

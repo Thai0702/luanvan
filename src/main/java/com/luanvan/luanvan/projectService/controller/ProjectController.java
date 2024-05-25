@@ -23,30 +23,30 @@ public class ProjectController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/api/project/create-project")
+    @PostMapping("/api-gv/project/create-project")
     public ResponseEntity<String>createProject(@RequestBody CreateProjectForm formData, @RequestHeader(value = "Authorization")String requestToken){
         formData.setCreatedBy(authenticationService.getUserIdFromToken(requestToken));
         return ResponseEntity.ok(projectService.createProject(formData));
     }
-    @DeleteMapping("/api/project/delete-project/{id}")
+    @DeleteMapping("/api-gv/project/delete-project/{projectId}")
     public ResponseEntity<String>deleteProject(@PathVariable Integer id){
         return ResponseEntity.ok(projectService.deleteProject(id));
     }
-    @PostMapping("/api/project/{id}/project-log")
+    @PostMapping("/api-gv/project/project-log/{projectId}")
     public ResponseEntity<String>createProjectLog(@PathVariable Integer id, @RequestBody ProjectLogForm form, @RequestHeader(value = "Authorization")String requestToken){
         form.setCreated_by(authenticationService.getUserIdFromToken(requestToken));
         return ResponseEntity.ok(projectService.createProjectLog(id,form));
     }
-    @GetMapping("/api/project/{projectId}/project-log")
+    @GetMapping("/api-gv/project/project-log/{projectId}")
     public List<ProjectLog>getAllProjectLog(@PathVariable Integer projectId){
         return projectService.getAllProjectLog(projectId);
     }
-    @GetMapping("/api/group/{id}/projects")
-    public List<Project>getAllProjectByGroupId(@PathVariable Integer id){
+    @GetMapping("/api-gv/group/projects/{groupId}")
+    public List<Project>getAllProjectByGroupId(@PathVariable Integer groupId){
 
-        return projectService.getAllProjectByGroup(id);
+        return projectService.getAllProjectByGroup(groupId);
     }
-    @GetMapping("/api/project/{projectId}")
+    @GetMapping("/api-gv/project/{projectId}")
     public Project getProjectByGroup(@PathVariable Integer projectId){
         return projectService.getOneById(projectId);
     }
