@@ -61,6 +61,19 @@ public class AuthenticationService {
 
         return new AuthenticationResponse(token);
     }
+    public AuthenticationResponse registerAdmin(RegisterRequest request){
+        User userAdmin=new User();
+        userAdmin.setFullname(request.getFullname());
+        userAdmin.setPassword(passwordEncoder.encode(request.getPassword()));
+        userAdmin.setUsername(request.getUsername());
+        userAdmin.setPhone(request.getPhone());
+        userAdmin.setRole(Role.ADMIN);
+
+        userRepo.save(userAdmin);
+        String token=jwtService.generateToken(userAdmin);
+
+        return new AuthenticationResponse(token);
+    }
 
     public AuthenticationResponse authenticate(LoginRequest request){
         authenticationManager.authenticate(

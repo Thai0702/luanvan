@@ -1,6 +1,7 @@
 package com.luanvan.luanvan.projectService.controller;
 
 
+import com.luanvan.luanvan.groupService.model.Group;
 import com.luanvan.luanvan.projectService.model.Project;
 import com.luanvan.luanvan.projectService.model.ProjectLog;
 import com.luanvan.luanvan.projectService.service.ProjectService;
@@ -54,4 +55,26 @@ public class ProjectController {
     public List<Project>getAllProject(){
         return projectService.getAllProject();
     }
+
+    // xoa project
+    @DeleteMapping("/api-gv/project/delete/{projectId}")
+    public ResponseEntity<String> deleteProjectById(@PathVariable Integer projectId) {
+        try {
+            projectService.deleteProjectById(projectId);
+            return ResponseEntity.ok("Đã xóa project có id là " + projectId);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi trong quá trình xóa Project");
+        }
+    }
+    //sua project
+    @PutMapping("/api-gv/project/update/{projectId}")
+    public ResponseEntity<String> updateProject(@PathVariable Integer projectId, @RequestBody Project project) {
+        try {
+            Project pr = projectService.updateProject(projectId, project);
+            return ResponseEntity.ok("Đã sửa nhóm có id là " + projectId);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi trong quá trình sửa");
+        }
+    }
+
 }

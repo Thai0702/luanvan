@@ -34,4 +34,14 @@ public class Project {
     @Column(name = "expired_time")
     private Time expiredTime;
 
+    public Project(String projectName, int projectOfGroup, String projectDescription, int createdBy, Timestamp createdAt, Date expiredDay, Time expiredTime) {
+
+        this.projectName = projectName;
+        this.projectOfGroup = projectOfGroup;
+        this.projectDescription = projectDescription;
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+        this.expiredDay = expiredDay;
+        this.expiredTime = expiredTime;
+    }
 }

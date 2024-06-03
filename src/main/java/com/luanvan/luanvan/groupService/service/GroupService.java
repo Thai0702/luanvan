@@ -165,8 +165,8 @@ public class GroupService {
         groupRepository.deleteById(id);
     }
 
-    public Group updateGroup(Integer id, Group group){
-        Group gr = groupRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Khong co group voi id:"+id));
+    public Group updateGroup(Integer groupId, Group group){
+        Group gr = groupRepository.findById(groupId).orElseThrow(() -> new EntityNotFoundException("Khong co group voi id:"+ groupId));
         gr.setLeaderId(group.getLeaderId());
         gr.setClassId(group.getClassId());
         gr.setGroupName(group.getGroupName());
@@ -246,7 +246,7 @@ public class GroupService {
             }
             Student student = new Student(subjectClass.getSubjectClassId(), accountId);
             studentRepository.save(student);  // Assumption: you have a repository for Student
-            return new ResponseEntity<>("Successfully joined the class" +" "+ accountId,HttpStatus.OK);
+            return new ResponseEntity<>("Successfully joined the class" +"User"+ accountId,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -260,6 +260,10 @@ public class GroupService {
             output.append(source.charAt(index));
         }
         return output.toString();
+    }
+    // get all group
+    public List<Group> findAllGroup() {
+        return groupRepository.findAll();
     }
 
 }

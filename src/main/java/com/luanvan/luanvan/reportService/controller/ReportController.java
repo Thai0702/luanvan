@@ -65,6 +65,17 @@ public class ReportController {
 //        String result = reportService.saveReportSubmit(requestId, reportSubmit, attachment, requestToken);
 //        return ResponseEntity.ok().body(result);
 //    }
+//    @PostMapping("/api/report-submit/{requestId}/{reportTitle}/{reportDescription}")
+//    public ResponseEntity<String> saveReportSubmit(
+//            @PathVariable Integer requestId,
+//            @PathVariable String reportTitle,
+//            @PathVariable String reportDescription,
+//            @RequestParam("attachment") MultipartFile attachment,
+//            @RequestHeader(value = "Authorization") String requestToken) {
+//
+//        String result = reportService.saveReportSubmit(requestId, reportTitle, reportDescription, attachment, requestToken);
+//        return ResponseEntity.ok().body(result);
+//    }
     @PostMapping("/api/report-submit/{requestId}/{reportTitle}/{reportDescription}")
     public ResponseEntity<String> saveReportSubmit(
             @PathVariable Integer requestId,
@@ -76,7 +87,5 @@ public class ReportController {
         String result = reportService.saveReportSubmit(requestId, reportTitle, reportDescription, attachment, requestToken);
         return ResponseEntity.ok().body(result);
     }
-
-
 
 }

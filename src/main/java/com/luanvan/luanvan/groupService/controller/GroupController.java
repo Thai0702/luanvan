@@ -33,7 +33,10 @@ public class GroupController {
         this.authenticationService = authenticationService;
         this.groupMemberRepository = groupMemberRepository;
     }
-
+    @GetMapping("/api-admin/getAll/group")
+    public ResponseEntity<List<Group>> showGroup(){
+        return  ResponseEntity.ok().body(groupService.findAllGroup());
+    }
     //tạo nhóm bằng danh sách
     @PostMapping("/api/class/create-groups")
     public ResponseEntity<String>createGroupFromList(@RequestBody List<GroupInfo> groupInfoList){
@@ -117,7 +120,7 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
         return new ResponseEntity<>(HttpStatus.OK);
     }
     // xoa nhom
-    @DeleteMapping("/api/group/{groupId}")
+    @DeleteMapping("/api/group/delete/{groupId}")
     public ResponseEntity<String> deleteGroupById(@PathVariable Integer groupId) {
         try {
             groupService.deleteGroupById(groupId);
@@ -127,11 +130,11 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
         }
     }
     //sua nhom
-    @PutMapping("/api/group/{groupId}")
-    public ResponseEntity<String> updateGroup(@PathVariable Integer id, @RequestBody Group group) {
+    @PutMapping("/api/group/update/{groupId}")
+    public ResponseEntity<String> updateGroup(@PathVariable Integer groupId, @RequestBody Group group) {
         try {
-            Group gr = groupService.updateGroup(id, group);
-            return ResponseEntity.ok("Đã sửa nhóm có id là " + id);
+            Group gr = groupService.updateGroup(groupId, group);
+            return ResponseEntity.ok("Đã sửa nhóm có id là " + groupId);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Lỗi trong quá trình sửa");
         }
@@ -184,5 +187,4 @@ public ResponseEntity<?> studentJoinGroup(@PathVariable Integer classId, @PathVa
     }
 
     //  delete member in group
-
 }

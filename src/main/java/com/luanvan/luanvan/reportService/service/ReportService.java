@@ -68,36 +68,66 @@ public String updateReportRequest(Integer id, ReportForm reportForm) {
         return reportRequestRepository.findBySubjectClass(classId);
     }
 
-public String saveReportSubmit(Integer requestId, String reportTitle, String reportDescription, MultipartFile attachment, String requestToken) {
-    if (reportRequestRepository.existsById(requestId)) {
-        int userId = authenticationService.getUserIdFromToken(requestToken);
+    public String saveReportSubmit(Integer requestId, String reportTitle, String reportDescription, MultipartFile attachment, String requestToken) {
+        if (reportRequestRepository.existsById(requestId)) {
+            int userId = authenticationService.getUserIdFromToken(requestToken);
 
-        ReportSubmit reportSubmit = new ReportSubmit();
-        reportSubmit.setSubmitBy(userId);
-        reportSubmit.setSubmitOfRequest(requestId);
-        reportSubmit.setReportTitle(reportTitle);
-        reportSubmit.setReportDescription(reportDescription);
-        Date currentDate = new Date(System.currentTimeMillis());
-        reportSubmit.setCreatedDate(currentDate);
-        Time currentTime = new Time(System.currentTimeMillis());
-        reportSubmit.setCreatedTime(currentTime);
+            ReportSubmit reportSubmit = new ReportSubmit();
+            reportSubmit.setSubmitBy(userId);
+            reportSubmit.setSubmitOfRequest(requestId);
+            reportSubmit.setReportTitle(reportTitle);
+            reportSubmit.setReportDescription(reportDescription);
+            Date currentDate = new Date(System.currentTimeMillis());
+            reportSubmit.setCreatedDate(currentDate);
+            Time currentTime = new Time(System.currentTimeMillis());
+            reportSubmit.setCreatedTime(currentTime);
 
-        try {
-            if (attachment != null && !attachment.isEmpty()) {
-                byte[] fileBytes = attachment.getBytes();
-                Blob blob = new javax.sql.rowset.serial.SerialBlob(fileBytes);
-                reportSubmit.setAttachment(blob);
+            try {
+                if (attachment != null && !attachment.isEmpty()) {
+                    byte[] fileBytes = attachment.getBytes();
+                    Blob blob = new javax.sql.rowset.serial.SerialBlob(fileBytes);
+                    reportSubmit.setAttachment(blob);
+                }
+            } catch (IOException | SQLException ex) {
+                ex.printStackTrace();
+                return "Đã xảy ra lỗi khi xử lý tệp đính kèm.";
             }
-        } catch (IOException | SQLException ex) {
-            ex.printStackTrace();
-            return "Đã xảy ra lỗi khi xử lý tệp đính kèm.";
-        }
 
-        reportSubmitRepository.save(reportSubmit);
-        return "Nộp báo cáo thành công!";
+            reportSubmitRepository.save(reportSubmit);
+            return "Nộp báo cáo thành công!";
+        }
+        return "Không tìm thấy báo cáo có id: " + requestId + " để nộp!";
     }
-    return "Không tìm thấy báo cáo có id: " + requestId + " để nộp!";
-}
+//    public String saveReportSubmitWithAttachment(Integer requestId, String reportTitle, String reportDescription, MultipartFile attachment, String requestToken) {
+//        if (reportRequestRepository.existsById(requestId)) {
+//            int userId = authenticationService.getUserIdFromToken(requestToken);
+//
+//            ReportSubmit reportSubmit = new ReportSubmit();
+//            reportSubmit.setSubmitBy(userId);
+//            reportSubmit.setSubmitOfRequest(requestId);
+//            reportSubmit.setReportTitle(reportTitle);
+//            reportSubmit.setReportDescription(reportDescription);
+//            Date currentDate = new Date(System.currentTimeMillis());
+//            reportSubmit.setCreatedDate(currentDate);
+//            Time currentTime = new Time(System.currentTimeMillis());
+//            reportSubmit.setCreatedTime(currentTime);
+//
+//            try {
+//                if (attachment != null && !attachment.isEmpty()) {
+//                    byte[] fileBytes = attachment.getBytes();
+//                    Blob blob = new javax.sql.rowset.serial.SerialBlob(fileBytes);
+//                    reportSubmit.setAttachment(blob);
+//                }
+//            } catch (IOException | SQLException ex) {
+//                ex.printStackTrace();
+//                return "Error occurred while processing attachment file.";
+//            }
+//
+//            reportSubmitRepository.save(reportSubmit);
+//            return "Report submitted successfully!";
+//        }
+//        return "Report with id: " + requestId + " not found!";
+//    }
 
 
 }

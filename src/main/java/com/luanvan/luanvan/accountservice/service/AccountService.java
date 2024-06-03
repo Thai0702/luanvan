@@ -47,6 +47,7 @@ public class AccountService {
         this.passwordEncoder = passwordEncoder;
         this.groupService = groupService;
     }
+
     public List<Account> findAll() {
         return accountRepository.findAll();
     }
@@ -81,7 +82,6 @@ public class AccountService {
         return accountRepository.findByEmail(email);
     }
 
-
     public String importAccoutFromExcel( Integer idClass,@RequestParam("file") MultipartFile multipartFile) {
         try {
             // Đọc file Excel
@@ -110,28 +110,33 @@ public class AccountService {
 
 
                 if (mssvCell != null && hoCell != null && tenCell !=null&&lopCell!=null) {
-                    if (mssvCell.getCellType() == CellType.BLANK && hoCell.getCellType() == CellType.BLANK && tenCell.getCellType() == CellType.BLANK&&lopCell.getCellType()==CellType.BLANK) {
+                    if (mssvCell.getCellType() == CellType.BLANK && hoCell.getCellType() == CellType.BLANK && tenCell.getCellType() == CellType.BLANK && lopCell.getCellType() == CellType.BLANK) {
                         continue;
                     }
-                    String user_email =  mssvCell.getStringCellValue()+"@student.edu.vn";
+                    String user_email = mssvCell.getStringCellValue() + "@student.edu.vn";
                     String user_password = mssvCell.getStringCellValue();
                     String user_type = "SinhVien";
-                    String user_fullname= hoCell.getStringCellValue()+" "+tenCell.getStringCellValue();
-                    String user_lop=lopCell.getStringCellValue();
-                    String user_studentId=mssvCell.getStringCellValue();
+                    String user_fullname = hoCell.getStringCellValue() + " " + tenCell.getStringCellValue();
+                    String user_lop = lopCell.getStringCellValue();
+                    String user_studentId = mssvCell.getStringCellValue();
                     // kiem tra email ton tai chua?
                     // neu chua ton tai thi moi luu
+                    Account savedAccount = null;
                     if (accountRepository.findByEmail(user_email) == null) {
                         Account newAccount = new Account(passwordEncoder.encode(user_password), user_email, Role.SV, user_fullname);
-                        Account savedAccount = accountRepository.save(newAccount);
+                        savedAccount = accountRepository.save(newAccount);
                         // Lưu userId vào bảng student_list
                         studentRepository.save(new Student(idClass, savedAccount.getUserId()));
-                        StudentDetail studentDetail = new StudentDetail(savedAccount.getUserId(),user_studentId,user_lop);
+                        StudentDetail studentDetail = new StudentDetail(savedAccount.getUserId(), user_studentId, user_lop);
+                        // Lưu userId vào bảng student
                         studentDetailRepository.save(studentDetail);
                     } else {
-                        //them sinh vien vao lop
+                        // nếu studentId và classId của sinh viên  trong bảng student_list chưa có thì được phép thêm vào bảng student_list
                         int userId = accountRepository.findUserIdByEmail(user_email);
-                        studentRepository.save(new Student(idClass, userId));
+                        if (!studentRepository.existsByClassIdAndStudentId(idClass, userId)) {
+                            studentRepository.save(new Student(idClass, userId));
+                        }
+
                     }
 
                 }
@@ -139,7 +144,6 @@ public class AccountService {
             // Đóng luồng
             workbook.close();
             inputStream.close();
-
             //Luu group theo random
             Optional<SubjectClass> subjectClass=subjectClassReponsitory.findById(idClass);
             if(subjectClass.isPresent()&& Objects.equals(subjectClass.get().getGroupRegisterMethod(), "RANDOM")){
