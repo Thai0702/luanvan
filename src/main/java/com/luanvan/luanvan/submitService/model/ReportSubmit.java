@@ -1,4 +1,4 @@
-package com.luanvan.luanvan.reportService.model;
+package com.luanvan.luanvan.submitService.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,6 +33,8 @@ public class ReportSubmit {
     private Date createdDate;
     @Column(name="created_time")
     private Time createdTime;
-    @Column(name = "attachment")
-    private Blob attachment;
+    @Column(name = "attachment_url")
+    private Blob attachment_URL;
+    @Column(name = "url")
+    private String Url;
 }

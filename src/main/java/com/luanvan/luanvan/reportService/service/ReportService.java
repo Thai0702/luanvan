@@ -2,13 +2,11 @@ package com.luanvan.luanvan.reportService.service;
 
 
 import com.luanvan.luanvan.reportService.model.ReportRequest;
-import com.luanvan.luanvan.reportService.model.ReportSubmit;
+import com.luanvan.luanvan.submitService.model.ReportSubmit;
 import com.luanvan.luanvan.reportService.repository.ReportRequestRepository;
-import com.luanvan.luanvan.reportService.repository.ReportSubmitRepository;
+import com.luanvan.luanvan.submitService.repository.ReportSubmitRepository;
 import com.luanvan.luanvan.reportService.wrapper.ReportForm;
 import com.luanvan.luanvan.securityService.service.AuthenticationService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
