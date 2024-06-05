@@ -20,18 +20,24 @@ public class SecurityConfig {
     private final UserDetailsServiceImp userDetailsServiceImp;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     //Danh sach duong dan chi GV dc phep truy cap
-    private static final String[] GV_ACCESS={
-            "/api-gv/**"
+ private static final String[] GV_ACCESS={
+            "/api-gv/"
     };
     //TUONG TU NHU TREN NHUNG LA ADMIN
     private static final String[] ADMIN_ACCESS={
-            "/api-admin/**"
+            "/api-admin/"
     };
+
     public SecurityConfig(UserDetailsServiceImp userDetailsServiceImp, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsServiceImp = userDetailsServiceImp;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
+<<<<<<< HEAD
     @Bean
+=======
+
+        @Bean
+>>>>>>> d52d74155360672f520d43e576acc95b17839705
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
