@@ -2,13 +2,11 @@ package com.luanvan.luanvan.reportService.service;
 
 
 import com.luanvan.luanvan.reportService.model.ReportRequest;
-import com.luanvan.luanvan.reportService.model.ReportSubmit;
+import com.luanvan.luanvan.submitService.model.ReportSubmit;
 import com.luanvan.luanvan.reportService.repository.ReportRequestRepository;
-import com.luanvan.luanvan.reportService.repository.ReportSubmitRepository;
+import com.luanvan.luanvan.submitService.repository.ReportSubmitRepository;
 import com.luanvan.luanvan.reportService.wrapper.ReportForm;
 import com.luanvan.luanvan.securityService.service.AuthenticationService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -86,7 +84,7 @@ public String updateReportRequest(Integer id, ReportForm reportForm) {
                 if (attachment != null && !attachment.isEmpty()) {
                     byte[] fileBytes = attachment.getBytes();
                     Blob blob = new javax.sql.rowset.serial.SerialBlob(fileBytes);
-                    reportSubmit.setAttachment(blob);
+                    reportSubmit.setAttachment_URL(blob);
                 }
             } catch (IOException | SQLException ex) {
                 ex.printStackTrace();
@@ -98,36 +96,7 @@ public String updateReportRequest(Integer id, ReportForm reportForm) {
         }
         return "Không tìm thấy báo cáo có id: " + requestId + " để nộp!";
     }
-//    public String saveReportSubmitWithAttachment(Integer requestId, String reportTitle, String reportDescription, MultipartFile attachment, String requestToken) {
-//        if (reportRequestRepository.existsById(requestId)) {
-//            int userId = authenticationService.getUserIdFromToken(requestToken);
-//
-//            ReportSubmit reportSubmit = new ReportSubmit();
-//            reportSubmit.setSubmitBy(userId);
-//            reportSubmit.setSubmitOfRequest(requestId);
-//            reportSubmit.setReportTitle(reportTitle);
-//            reportSubmit.setReportDescription(reportDescription);
-//            Date currentDate = new Date(System.currentTimeMillis());
-//            reportSubmit.setCreatedDate(currentDate);
-//            Time currentTime = new Time(System.currentTimeMillis());
-//            reportSubmit.setCreatedTime(currentTime);
-//
-//            try {
-//                if (attachment != null && !attachment.isEmpty()) {
-//                    byte[] fileBytes = attachment.getBytes();
-//                    Blob blob = new javax.sql.rowset.serial.SerialBlob(fileBytes);
-//                    reportSubmit.setAttachment(blob);
-//                }
-//            } catch (IOException | SQLException ex) {
-//                ex.printStackTrace();
-//                return "Error occurred while processing attachment file.";
-//            }
-//
-//            reportSubmitRepository.save(reportSubmit);
-//            return "Report submitted successfully!";
-//        }
-//        return "Report with id: " + requestId + " not found!";
-//    }
+
 
 
 }

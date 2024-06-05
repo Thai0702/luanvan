@@ -26,10 +26,11 @@ public class Account {
   @Column(name = "full_name")
   private String fullName;
 
-  public Account( String password, String email, Role type, String fullName) {
+  public Account( String password, String email, Role type, String fullName, String phoneNumber) {
     this.password = password;
     this.email = email;
     this.type = type;
     this.fullName = fullName;
+    this.phoneNumber= phoneNumber;
   }
 }

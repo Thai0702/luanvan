@@ -89,7 +89,7 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
     }
 }
     //lay danh sach lop da join
-    @GetMapping("/api/api-gv/user/{userId}/joined-class")
+    @GetMapping("/api/user/{userId}/joined-class")
     public ResponseEntity<?>getJoinedClassOfUser(@PathVariable Integer userId){
         return groupService.findJoinedClassById(userId);
     }

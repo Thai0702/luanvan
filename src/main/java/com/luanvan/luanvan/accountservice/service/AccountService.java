@@ -94,12 +94,13 @@ public class AccountService {
             int hoColumnIndex = 3;
             int tenColumnIndex =4;
             int lopColumIndex=5;
+            int phoneColumIndex=6;
 
             // Duyệt qua từng dòng trong file Excel
             Iterator<Row> rowIterator = sheet.iterator();
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
-                if (row.getRowNum() < 6) { // Bỏ qua các dòng trước dòng 7
+                if (row.getRowNum() <= 6) { // Bỏ qua các dòng trước dòng 7
                     continue;
                 }
 
@@ -107,10 +108,11 @@ public class AccountService {
                 Cell hoCell = row.getCell(hoColumnIndex);
                 Cell tenCell = row.getCell(tenColumnIndex);
                 Cell lopCell = row.getCell(lopColumIndex);
+                Cell phoneCell=row.getCell(phoneColumIndex);
 
 
-                if (mssvCell != null && hoCell != null && tenCell !=null&&lopCell!=null) {
-                    if (mssvCell.getCellType() == CellType.BLANK && hoCell.getCellType() == CellType.BLANK && tenCell.getCellType() == CellType.BLANK && lopCell.getCellType() == CellType.BLANK) {
+                if (mssvCell != null && hoCell != null && tenCell !=null&&lopCell!=null && phoneCell !=null) {
+                    if (mssvCell.getCellType() == CellType.BLANK && hoCell.getCellType() == CellType.BLANK && tenCell.getCellType() == CellType.BLANK && lopCell.getCellType() == CellType.BLANK &&phoneCell.getCellType() == CellType.BLANK ) {
                         continue;
                     }
                     String user_email = mssvCell.getStringCellValue() + "@student.edu.vn";
@@ -119,11 +121,18 @@ public class AccountService {
                     String user_fullname = hoCell.getStringCellValue() + " " + tenCell.getStringCellValue();
                     String user_lop = lopCell.getStringCellValue();
                     String user_studentId = mssvCell.getStringCellValue();
+                    // Kiểm tra loại dữ liệu của ô phoneCell và chuyển đổi nếu cần thiết
+                    String phone_number;
+                    if (phoneCell.getCellType() == CellType.NUMERIC) {
+                        phone_number = String.valueOf((long) phoneCell.getNumericCellValue());
+                    } else {
+                        phone_number = phoneCell.getStringCellValue();
+                    }
                     // kiem tra email ton tai chua?
                     // neu chua ton tai thi moi luu
                     Account savedAccount = null;
                     if (accountRepository.findByEmail(user_email) == null) {
-                        Account newAccount = new Account(passwordEncoder.encode(user_password), user_email, Role.SV, user_fullname);
+                        Account newAccount = new Account(passwordEncoder.encode(user_password), user_email, Role.SV, user_fullname,phone_number);
                         savedAccount = accountRepository.save(newAccount);
                         // Lưu userId vào bảng student_list
                         studentRepository.save(new Student(idClass, savedAccount.getUserId()));

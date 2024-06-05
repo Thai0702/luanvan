@@ -28,7 +28,7 @@ public class SubjectClassController {
     SubjectClassService subjectClassService;
     AuthenticationService authenticationService;
     @GetMapping("/api-admin/class")
-    public ResponseEntity<List<SubjectClass>> showAccount(){
+    public ResponseEntity<List<SubjectClass>> showClass(){
         return  ResponseEntity.ok().body(subjectClassService.findAllClass());
     }
     public SubjectClassController(SubjectClassService subjectClassService, AuthenticationService authenticationService, GroupService groupService) {
@@ -89,8 +89,8 @@ public class SubjectClassController {
         return subjectClassService.getSubjectClassesByStudentId(studentId);
     }
     // tao account bang file excel
-    @PostMapping("/api-gv/class/excel/{classId}")
-    public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
-        return accountService.importAccoutFromExcel(classId,multipartFile);
-    }
+//    @PostMapping("/api-gv/class/excel/{classId}")
+//    public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
+//        return accountService.importAccoutFromExcel(classId,multipartFile);
+//    }
 }
