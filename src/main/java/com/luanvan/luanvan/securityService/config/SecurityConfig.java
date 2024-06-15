@@ -32,20 +32,15 @@ public class SecurityConfig {
         this.userDetailsServiceImp = userDetailsServiceImp;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
-<<<<<<< HEAD
     @Bean
-=======
-
-        @Bean
->>>>>>> d52d74155360672f520d43e576acc95b17839705
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/api/authenticate/**")
+                        req->req.requestMatchers("/api/authenticate/**","/**")
                                 .permitAll()
                                 .requestMatchers(GV_ACCESS).hasAnyAuthority("GV","ADMIN")
-                                .requestMatchers(ADMIN_ACCESS).hasAnyAuthority("ADMIN")
+                                .requestMatchers(ADMIN_ACCESS).hasAnyAuthority("GV","ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailsServiceImp)

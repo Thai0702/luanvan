@@ -67,12 +67,19 @@ public class GroupService {
         for (MemberInfo member : memberList) {
             GroupMember newMember = new GroupMember();
             newMember.setMemberId(member.getAccountId());
+          //  Group groupInfo = (Group) groupRepository.findGroupByGroupName(member.getGroupName());
+            List<Group> groupInfo = groupRepository.findGroupByGroupName(member.getGroupName());
+            if (!groupInfo.isEmpty()) {
+                Group group = groupInfo.get(0); // Lấy nhóm đầu tiên trong danh sách
 
-            Group groupInfo = groupRepository.findGroupByGroupName(member.getGroupName());
-            newMember.setGroupId(groupInfo.getGroupId());
+                // Thiết lập groupId cho newMember
+                newMember.setGroupId(group.getGroupId());
 
-
-            groupMemberRepository.save(newMember);
+                // Lưu newMember vào groupMemberRepository
+                groupMemberRepository.save(newMember);
+            } else {
+                return new ResponseEntity<>("not ok", HttpStatus.OK);
+            }
         }
 
         return new ResponseEntity<>("SUCCES", HttpStatus.CREATED);
