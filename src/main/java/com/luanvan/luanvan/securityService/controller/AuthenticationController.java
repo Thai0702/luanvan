@@ -24,6 +24,13 @@ public class AuthenticationController {
         }
         return ResponseEntity.ok(authenticationService.register(request));
     }
+    @PostMapping("/api/authenticate/registerAdmin")
+    public ResponseEntity<?>registerAdmin(@RequestBody RegisterRequest request){
+        if(authenticationService.checkExistUser(request)){
+            return new ResponseEntity<String>("EXIST USER",HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(authenticationService.registerAdmin(request));
+    }
     @PostMapping("/api/authenticate/login")
     public ResponseEntity<AuthenticationResponse>login(@RequestBody LoginRequest request){
         return ResponseEntity.ok(authenticationService.authenticate(request));

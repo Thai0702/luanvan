@@ -2,12 +2,14 @@ package com.luanvan.luanvan.projectService.service;
 
 
 import com.luanvan.luanvan.accountservice.repository.StudentDetailRepository;
+import com.luanvan.luanvan.groupService.model.Group;
 import com.luanvan.luanvan.projectService.model.Project;
 import com.luanvan.luanvan.projectService.model.ProjectLog;
 import com.luanvan.luanvan.projectService.repository.ProjectLogRepository;
 import com.luanvan.luanvan.projectService.repository.ProjectRepository;
 import com.luanvan.luanvan.projectService.wrapper.CreateProjectForm;
 import com.luanvan.luanvan.projectService.wrapper.ProjectLogForm;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +43,10 @@ public class ProjectService {
         project.setCreatedAt(timestamp);
 
         project.setExpiredDay(formData.getExpiredDay());
+
         project.setExpiredTime(formData.getFormattedExpiredTime());
+
+        project.setExpiredTime(String.valueOf(formData.getFormattedExpiredTime()));
         projectRepository.save(project);
         return "Created !";
     }
@@ -87,5 +92,20 @@ public class ProjectService {
 
     public List<ProjectLog> getAllProjectLog(Integer projectId) {
         return projectLogRepository.getAllByLogOfProject(projectId);
+    }
+    // xoa project
+    public void deleteProjectById(Integer id) {
+        projectRepository.deleteById(id);
+    }
+    // sua project
+    public Project updateProject(Integer projectId, Project project){
+        Project pr = projectRepository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("Khong co group voi id:"+ projectId));
+        pr.setProjectName(project.getProjectName());
+        pr.setProjectDescription(project.getProjectDescription());
+        pr.setProjectOfGroup(project.getProjectOfGroup());
+        pr.setExpiredDay(project.getExpiredDay());
+        pr.setExpiredTime(project.getExpiredTime());
+        projectRepository.save(pr);
+        return pr;
     }
 }

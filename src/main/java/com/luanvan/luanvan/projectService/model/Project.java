@@ -6,6 +6,8 @@ import lombok.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 @Getter
 @Setter
@@ -32,6 +34,23 @@ public class Project {
     @Column(name = "expired_day")
     private Date expiredDay;
     @Column(name = "expired_time")
-    private Time expiredTime;
+    private String expiredTime; // Thay đổi kiểu dữ liệu của expiredTime thành String
 
+    // Phương thức để chuyển đổi thời gian thành đối tượng Time
+    public Time getFormattedExpiredTime2() {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm:ss");
+
+        try {
+            // Chuyển đổi chuỗi thành đối tượng Date
+            java.util.Date time = inputFormat.parse(this.expiredTime);
+            // Lấy thời gian dưới dạng chuỗi theo định dạng HH:mm:ss
+            String formattedTime = outputFormat.format(time);
+            // Chuyển đổi chuỗi thành đối tượng Time
+            return Time.valueOf(formattedTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

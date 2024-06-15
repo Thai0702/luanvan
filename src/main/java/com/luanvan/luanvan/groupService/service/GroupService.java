@@ -67,12 +67,19 @@ public class GroupService {
         for (MemberInfo member : memberList) {
             GroupMember newMember = new GroupMember();
             newMember.setMemberId(member.getAccountId());
+          //  Group groupInfo = (Group) groupRepository.findGroupByGroupName(member.getGroupName());
+            List<Group> groupInfo = groupRepository.findGroupByGroupName(member.getGroupName());
+            if (!groupInfo.isEmpty()) {
+                Group group = groupInfo.get(0); // Lấy nhóm đầu tiên trong danh sách
 
-            Group groupInfo = groupRepository.findGroupByGroupName(member.getGroupName());
-            newMember.setGroupId(groupInfo.getGroupId());
+                // Thiết lập groupId cho newMember
+                newMember.setGroupId(group.getGroupId());
 
-
-            groupMemberRepository.save(newMember);
+                // Lưu newMember vào groupMemberRepository
+                groupMemberRepository.save(newMember);
+            } else {
+                return new ResponseEntity<>("not ok", HttpStatus.OK);
+            }
         }
 
         return new ResponseEntity<>("SUCCES", HttpStatus.CREATED);
@@ -165,8 +172,8 @@ public class GroupService {
         groupRepository.deleteById(id);
     }
 
-    public Group updateGroup(Integer id, Group group){
-        Group gr = groupRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Khong co group voi id:"+id));
+    public Group updateGroup(Integer groupId, Group group){
+        Group gr = groupRepository.findById(groupId).orElseThrow(() -> new EntityNotFoundException("Khong co group voi id:"+ groupId));
         gr.setLeaderId(group.getLeaderId());
         gr.setClassId(group.getClassId());
         gr.setGroupName(group.getGroupName());
@@ -246,7 +253,7 @@ public class GroupService {
             }
             Student student = new Student(subjectClass.getSubjectClassId(), accountId);
             studentRepository.save(student);  // Assumption: you have a repository for Student
-            return new ResponseEntity<>("Successfully joined the class" +" "+ accountId,HttpStatus.OK);
+            return new ResponseEntity<>("Successfully joined the class" +"User"+ accountId,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -260,6 +267,10 @@ public class GroupService {
             output.append(source.charAt(index));
         }
         return output.toString();
+    }
+    // get all group
+    public List<Group> findAllGroup() {
+        return groupRepository.findAll();
     }
 
 }

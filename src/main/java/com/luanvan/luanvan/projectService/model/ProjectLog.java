@@ -29,4 +29,13 @@ public class ProjectLog {
     private String logDescription;
     @Column(name="attachment")
     private String attachment;
+
+    public ProjectLog(int createdBy, Timestamp createdAt, int logOfProject, String logTitle, String logDescription, String attachment) {
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+        this.logOfProject = logOfProject;
+        this.logTitle = logTitle;
+        this.logDescription = logDescription;
+        this.attachment = attachment;
+    }
 }

@@ -48,35 +48,5 @@ public class ReportController {
     public  List<ReportRequest> getReportRequestsBySubjectClass(@PathVariable Integer classId){
         return reportService.getReportRequestsBySubjectClass(classId);
     }
-    // nop bao cao
-//    @PostMapping("/api/report-submit/{requestId}")
-//    public ResponseEntity<String>createReportSubmit(@PathVariable Integer requestId  ,@RequestBody ReportSubmit reportsubmit, @RequestHeader(value = "Authorization") String requestToken){
-//        return ResponseEntity.ok(reportService.saveReportSubmit(requestId,reportsubmit,requestToken));
-//    }
-//    @PostMapping("/api/report-submit/{requestId}")
-//    public ResponseEntity<String> saveReportSubmit(@PathVariable Integer requestId,
-//                                                   @RequestParam("reportTitle") String reportTitle,
-//                                                   @RequestParam("reportDescription") String reportDescription,
-//                                                   @RequestParam("attachment") MultipartFile attachment,
-//                                                   @RequestHeader(value = "Authorization") String requestToken) {
-//        ReportSubmit reportSubmit = new ReportSubmit();
-//        reportSubmit.setReportTitle(reportTitle);
-//        reportSubmit.setReportDescription(reportDescription);
-//        String result = reportService.saveReportSubmit(requestId, reportSubmit, attachment, requestToken);
-//        return ResponseEntity.ok().body(result);
-//    }
-    @PostMapping("/api/report-submit/{requestId}/{reportTitle}/{reportDescription}")
-    public ResponseEntity<String> saveReportSubmit(
-            @PathVariable Integer requestId,
-            @PathVariable String reportTitle,
-            @PathVariable String reportDescription,
-            @RequestParam("attachment") MultipartFile attachment,
-            @RequestHeader(value = "Authorization") String requestToken) {
-
-        String result = reportService.saveReportSubmit(requestId, reportTitle, reportDescription, attachment, requestToken);
-        return ResponseEntity.ok().body(result);
-    }
-
-
 
 }

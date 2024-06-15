@@ -2,6 +2,7 @@ package com.luanvan.luanvan.subjectclassservice.service;
 
 
 
+import com.luanvan.luanvan.accountservice.model.Account;
 import com.luanvan.luanvan.groupService.repository.StudentRepository;
 import com.luanvan.luanvan.subjectclassservice.model.SubjectClass;
 import com.luanvan.luanvan.subjectclassservice.repository.SubjectClassReponsitory;
@@ -25,8 +26,8 @@ public class SubjectClassService  {
 
 
 
-    public Optional<SubjectClass> findById(Integer integer) {
-        return subjectClassReponsitory.findById(integer);
+    public Optional<SubjectClass> findById(Integer classId) {
+        return subjectClassReponsitory.findById(classId);
     }
 
     public List<SubjectClass> findAll() {
@@ -39,15 +40,15 @@ public class SubjectClassService  {
         sc.setCreatedAt(timestamp);
         return subjectClassReponsitory.save(sc);
     }
-    public void deleteById(Integer id) {
-        subjectClassReponsitory.deleteById(id);
+    public void deleteById(Integer subjectClassId) {
+        subjectClassReponsitory.deleteById(subjectClassId);
     }
 
-    public SubjectClass updateSc(Integer id, SubjectClass subjectClass){
-        SubjectClass sc = subjectClassReponsitory.findById(id).orElseThrow(() -> new EntityNotFoundException("Khong co lop hoc voi id:"+id));
+    public SubjectClass updateSc(Integer subjectClassId, SubjectClass subjectClass){
+        SubjectClass sc = subjectClassReponsitory.findById(subjectClassId).orElseThrow(() -> new EntityNotFoundException("Khong co lop hoc voi id:"+subjectClassId));
         sc.setSubjectName(subjectClass.getSubjectName());
-        sc.setCreatedBy(subjectClass.getCreatedBy());
-        sc.setCreatedAt(subjectClass.getCreatedAt());
+//        sc.setCreatedBy(subjectClass.getCreatedBy());
+//        sc.setCreatedAt(subjectClass.getCreatedAt());
         sc.setSchoolYear(subjectClass.getSchoolYear());
         sc.setNumberOfGroup(subjectClass.getNumberOfGroup());
         sc.setMemberPerGroup(subjectClass.getMemberPerGroup());
@@ -60,5 +61,9 @@ public class SubjectClassService  {
     }
     public List<SubjectClass> getSubjectClassesByStudentId(int studentId) {
         return subjectClassReponsitory.findByStudentId(studentId);
+    }
+    // get all class
+    public List<SubjectClass> findAllClass() {
+        return subjectClassReponsitory.findAll();
     }
 }

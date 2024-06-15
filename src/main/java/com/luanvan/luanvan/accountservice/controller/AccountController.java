@@ -13,7 +13,9 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
+
 @RequestMapping("/api-gv/account")
+@RequestMapping("/api-admin/account")
 public class AccountController {
     @Autowired
     AccountService accountService;
@@ -42,7 +44,6 @@ public class AccountController {
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateAccount(@PathVariable Integer id, @RequestBody Account account) {
         try {
-
             Account ac = accountService.updateAc(id, account);
             return ResponseEntity.ok("Đã sửa tài khoản có id là " + id);
         } catch (Exception e) {
@@ -50,8 +51,21 @@ public class AccountController {
         }
     }
     // tao account bang file excel
+
     @PostMapping("/class/excel/{classId}")
     public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
         return accountService.importAccoutFromExcel(classId,multipartFile);
     }
+
+//    @PostMapping("/class/excel/{classId}")
+//    public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
+//        return accountService.importAccoutFromExcel(classId,multipartFile);
+//    }
+
+   //  tao account bang file excel
+   // @PostMapping("/class/excel/{classId}")
+   //  public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
+   //     return accountService.importAccoutFromExcel(classId,multipartFile);
+   // }
+
 }

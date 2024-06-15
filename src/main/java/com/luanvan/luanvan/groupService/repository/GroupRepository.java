@@ -11,7 +11,11 @@ import java.util.Optional;
 @Repository
 public interface GroupRepository extends JpaRepository<Group,Integer> {
     List<Group> findAllByClassId(Integer classId);
+
     Group findGroupByGroupName(String groupName);
+
+    List<Group> findGroupByGroupName(String groupName);
+
     Optional<Group> findByGroupIdAndClassId(Integer groupId, Integer classId);  // New method to find group by groupId and classId
     boolean existsByGroupNameAndClassId(String groupName, Integer classId);
 }

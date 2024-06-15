@@ -22,7 +22,8 @@ public class SubjectClass {
 
     @Column(name = "created_by")
     private int createdBy;
-
+    @Column(name = "full_name")
+    private String fullNameCreate;
     @Column(name ="created_at")
     private Timestamp createdAt;
     @Column(name="school_year")

@@ -5,7 +5,6 @@ package com.luanvan.luanvan.securityService.service;
 import com.luanvan.luanvan.accountservice.model.Account;
 import com.luanvan.luanvan.accountservice.model.Role;
 import com.luanvan.luanvan.accountservice.repository.AccountRepository;
-import com.luanvan.luanvan.groupService.model.Student;
 import com.luanvan.luanvan.groupService.repository.StudentRepository;
 import com.luanvan.luanvan.securityService.entity.User;
 import com.luanvan.luanvan.securityService.model.AuthenticationResponse;
@@ -61,6 +60,19 @@ public class AuthenticationService {
 
         return new AuthenticationResponse(token);
     }
+    public AuthenticationResponse registerAdmin(RegisterRequest request){
+        User userAdmin=new User();
+        userAdmin.setFullname(request.getFullname());
+        userAdmin.setPassword(passwordEncoder.encode(request.getPassword()));
+        userAdmin.setUsername(request.getUsername());
+        userAdmin.setPhone(request.getPhone());
+        userAdmin.setRole(Role.ADMIN);
+
+        userRepo.save(userAdmin);
+        String token=jwtService.generateToken(userAdmin);
+
+        return new AuthenticationResponse(token);
+    }
 
     public AuthenticationResponse authenticate(LoginRequest request){
         authenticationManager.authenticate(
@@ -81,7 +93,14 @@ public class AuthenticationService {
         }
         return 0;
     }
-
+//    public String getFullNameFromToken(String token) {
+//        String username = jwtService.extractUsername(token.substring(7));
+//        var user = userRepo.findByUsername(username);
+//        if (user.isPresent()) {
+//            return user.get().getFullname();
+//        }
+//        return null; // Hoặc bạn có thể trả về một giá trị mặc định khác phù hợp với logic của bạn
+//    }
     public Boolean checkExistUser(RegisterRequest request){
         if(userRepo.existsUsersByUsername(request.getUsername())){
             return true;
