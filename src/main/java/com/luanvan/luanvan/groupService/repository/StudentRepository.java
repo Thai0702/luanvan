@@ -19,6 +19,8 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
     List<Student> findByStudentIdAndClassId(Integer studentId,Integer classId);
     void deleteByClassIdAndStudentId(int classId, int studentId);
     boolean existsByClassIdAndStudentId(int classId, int studentId);
+
+
     @Query("SELECT studentId FROM Student WHERE studentId = :studentId")
     int findStudentId(@Param("studentId") int studentId);
     //boolean existsByGroupIdAndStudentId(int groupId, int studentId);

@@ -47,7 +47,6 @@ public class AccountService {
         this.passwordEncoder = passwordEncoder;
         this.groupService = groupService;
     }
-
     public List<Account> findAll() {
         return accountRepository.findAll();
     }
