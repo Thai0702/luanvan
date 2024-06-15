@@ -48,17 +48,5 @@ public class ReportController {
     public  List<ReportRequest> getReportRequestsBySubjectClass(@PathVariable Integer classId){
         return reportService.getReportRequestsBySubjectClass(classId);
     }
-//    // submit
-//    @PostMapping("/api/report-submit/{requestId}/{reportTitle}/{reportDescription}")
-//    public ResponseEntity<String> saveReportSubmit(
-//            @PathVariable Integer requestId,
-//            @PathVariable String reportTitle,
-//            @PathVariable String reportDescription,
-//            @RequestParam("attachment") MultipartFile attachment,
-//            @RequestHeader(value = "Authorization") String requestToken) {
-//
-//        String result = reportService.saveReportSubmit(requestId, reportTitle, reportDescription, attachment, requestToken);
-//        return ResponseEntity.ok().body(result);
-//    }
 
 }
