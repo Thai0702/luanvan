@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface GroupMemberRepository extends JpaRepository<GroupMember,Integer> {
     public List<GroupMember>findAllByGroupId(Integer groupId);
+    void deleteByGroupIdAndMemberId(int groupId, int memberId);
+    boolean existsByGroupIdAndMemberId(int groupId, int memberId);
 }

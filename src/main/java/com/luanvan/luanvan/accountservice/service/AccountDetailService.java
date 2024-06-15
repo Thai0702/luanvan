@@ -5,6 +5,7 @@ import com.luanvan.luanvan.accountservice.model.Role;
 import com.luanvan.luanvan.accountservice.model.StudentDetail;
 import com.luanvan.luanvan.accountservice.repository.AccountRepository;
 import com.luanvan.luanvan.accountservice.repository.StudentDetailRepository;
+import com.luanvan.luanvan.accountservice.wrapper.AdminAccountDetail;
 import com.luanvan.luanvan.accountservice.wrapper.StudentAccountDetail;
 import com.luanvan.luanvan.accountservice.wrapper.TeacherAccountDetail;
 import com.luanvan.luanvan.groupService.model.Student;
@@ -78,6 +79,11 @@ public class AccountDetailService {
         if(account.isPresent()&&account.get().getType()== Role.GV){
             TeacherAccountDetail accountDetail=new TeacherAccountDetail(account.get().getUserId(),account.get().getFullName(),account.get().getEmail(),account.get().getPhoneNumber());
             return new ResponseEntity<TeacherAccountDetail>(accountDetail,HttpStatus.OK);
+        }
+        System.out.println("hello");
+        if(account.isPresent()&&account.get().getType()== Role.ADMIN){
+            AdminAccountDetail accountDetail=new AdminAccountDetail(account.get().getUserId(),account.get().getFullName(),account.get().getEmail(),account.get().getPhoneNumber(),account.get().getType());
+            return new ResponseEntity<AdminAccountDetail>(accountDetail,HttpStatus.OK);
         }
         if(account.isPresent()&&account.get().getType()== Role.SV){
             StudentAccountDetail accountDetail=getStudentAccountDetail(accountId);

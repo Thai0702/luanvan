@@ -19,7 +19,7 @@ public class ReportController {
         this.reportService = reportService;
     }
     //tao bao cao(gv)
-    @PostMapping("/api/report-request")
+    @PostMapping("/api-gv/report-request")
     public ResponseEntity<String>createReportRequest(@RequestBody ReportRequest reportRequest, @RequestHeader(value = "Authorization") String requestToken){
         ReportRequest savedReportRequest = reportService.saveReportRequest(reportRequest, requestToken);
         if (savedReportRequest != null) {
@@ -29,22 +29,22 @@ public class ReportController {
         }
     }
     // xoa bao cao(gv)
-    @DeleteMapping("/api/report-request/{requestId}")
+    @DeleteMapping("/api-gv/report-request/delete/{requestId}")
     public ResponseEntity<String>deleteReportRequest(@PathVariable Integer requestId){
         return ResponseEntity.ok(reportService.deleteReportRequest(requestId));
     }
     // sua bao cao(gv)
-    @PutMapping("/api/report-request/{requestId}")
+    @PutMapping("/api-gv/report-request/update/{requestId}")
     public ResponseEntity<String>updateReportRequest(@PathVariable Integer requestId, @RequestBody ReportForm reportRequest){
         return ResponseEntity.ok(reportService.updateReportRequest(requestId,reportRequest));
     }
     // lay tat ca bao cao(gv)
-    @GetMapping("/api/report-request")
+    @GetMapping("/api-gv/report-request")
     public List<ReportRequest> getAllReportRequest(){
         return reportService.getAllReportRequest();
     }
     //lay danh sach bao cao theo classId
-    @GetMapping("/api/report-request/{classId}")
+    @GetMapping("/api-gv/report-request/{classId}")
     public  List<ReportRequest> getReportRequestsBySubjectClass(@PathVariable Integer classId){
         return reportService.getReportRequestsBySubjectClass(classId);
     }

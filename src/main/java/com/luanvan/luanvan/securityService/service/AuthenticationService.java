@@ -105,7 +105,7 @@ public class AuthenticationService {
         User user = userOptional.get();
         String otp = generateOtp();
         saveOtp(otp, user);
-        String message = "Your OTP for password reset is: " + otp;
+        String message = "OTP thay đổi mật khẩu: " + otp;
         sendEmail(user.getUsername(), "Password Reset OTP", message);
         return true;
     }
@@ -166,28 +166,21 @@ public class AuthenticationService {
         }
         return null;
     }
-//    public boolean checkExistStudentId(Student request) {
-//        if(studentRepository.existsByClassIdAndStudentId(request.getClassId(),request.getStudentId())){
-//            return true;
-//        }
-//        return false;
-//    }
-    // change password
-public boolean changePassword(int accountId, ChangePasswordRequest changePasswordRequest) {
-    Optional<Account> accountOpt = accountRepository.findById(accountId);
+    public boolean changePassword(int accountId, ChangePasswordRequest changePasswordRequest) {
+        Optional<Account> accountOpt = accountRepository.findById(accountId);
 
-    if (accountOpt.isPresent()) {
-        Account account = accountOpt.get();
+        if (accountOpt.isPresent()) {
+            Account account = accountOpt.get();
 
-        if (passwordEncoder.matches(changePasswordRequest.getOldPassword(), account.getPassword())) {
-            account.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
-            accountRepository.save(account);
-            return true;
-        } else {
-            return false; // Old password does not match
+            if (passwordEncoder.matches(changePasswordRequest.getOldPassword(), account.getPassword())) {
+                account.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+                accountRepository.save(account);
+                return true;
+            } else {
+                return false;
+            }
         }
-    }
-    return false; // Account not found
+        return false;
 }
 
 

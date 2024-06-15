@@ -20,11 +20,11 @@ public class AccountDetailController {
         this.authenticationService = authenticationService;
     }
 
-    @GetMapping("/api/account/{accountId}/student-detail")
+    @GetMapping("/api/account/student-detail/{accountId}")
     public StudentAccountDetail getStudentAccountDetail(@PathVariable Integer accountId){
         return accountDetailService.getStudentAccountDetail(accountId);
     }
-    @GetMapping("/api/class/{classId}/student-list")
+    @GetMapping("/api/class/student-list/{classId}")
     public List<StudentInfo> getStudentListOfClass(@PathVariable Integer classId){
         return accountDetailService.getStudentInfoOfClass(classId);
     }

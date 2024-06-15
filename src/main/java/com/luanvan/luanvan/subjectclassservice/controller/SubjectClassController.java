@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/class")
+@RequestMapping("/api-gv/class")
 public class SubjectClassController {
     private final GroupService groupService;
     SubjectClassService subjectClassService;
@@ -28,7 +28,7 @@ public class SubjectClassController {
         this.authenticationService = authenticationService;
         this.groupService = groupService;
     }
-    @GetMapping("/{id}")
+    @GetMapping("/get/{classId}")
     public ResponseEntity<?> get1SubjectClassById(@PathVariable Integer id) {
         Optional<SubjectClass> subjectclass = subjectClassService.findById(id);
         if (subjectclass.isPresent()) {
@@ -54,7 +54,7 @@ public class SubjectClassController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @DeleteMapping("/api/class/api-gv/{id}")
+    @DeleteMapping("/delete/{classId}")
     public ResponseEntity<String> deleteSubjectClassById(@PathVariable Integer id) {
         try {
             subjectClassService.deleteById(id);
@@ -64,7 +64,7 @@ public class SubjectClassController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<String> updateSubjectClass(@PathVariable Integer id, @RequestBody SubjectClass subjectClass) {
         try {
             SubjectClass sc = subjectClassService.updateSc(id, subjectClass);
@@ -81,6 +81,4 @@ public class SubjectClassController {
     public List<SubjectClass> getClassByStudentId(@PathVariable Integer studentId){
         return subjectClassService.getSubjectClassesByStudentId(studentId);
     }
-
-
 }
