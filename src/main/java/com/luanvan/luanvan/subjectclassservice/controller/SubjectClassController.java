@@ -89,9 +89,17 @@ public class SubjectClassController {
     public List<SubjectClass> getClassByStudentId(@PathVariable Integer studentId){
         return subjectClassService.getSubjectClassesByStudentId(studentId);
     }
+
     // tao account bang file excel
     @PostMapping("/api-gv/class/excel/{classId}")
     public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
         return accountService.importAccoutFromExcel(classId,multipartFile);
     }
+
+  //  tao account bang file excel
+   @PostMapping("/api-gv/class/excel/{classId}")
+   public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
+       return accountService.importAccoutFromExcel(classId,multipartFile);
+   }
+
 }
