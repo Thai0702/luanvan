@@ -46,7 +46,9 @@ public class AccountDetailService {
                     studentDetail.getStudentId(),
                     studentDetail.getStudentClass(),
                     account.getEmail(),
-                    account.getPhoneNumber());
+                    account.getPhoneNumber(),
+                    account.getType());
+
             return accountDetail;
         }
         StudentDetail studentDetail=new StudentDetail(userId,"NOTFOUND","NOTFOUND");
@@ -55,7 +57,8 @@ public class AccountDetailService {
                 studentDetail.getStudentId(),
                 studentDetail.getStudentClass(),
                 account.getEmail(),
-                account.getPhoneNumber());
+                account.getPhoneNumber(),
+                account.getType());
         return accountDetail;
     }
     public List<StudentInfo>getStudentInfoOfClass(int classId){
@@ -77,7 +80,7 @@ public class AccountDetailService {
     public ResponseEntity<?>getAccountDetail(int accountId){
         Optional<Account> account=accountRepository.findById(accountId);
         if(account.isPresent()&&account.get().getType()== Role.GV){
-            TeacherAccountDetail accountDetail=new TeacherAccountDetail(account.get().getUserId(),account.get().getFullName(),account.get().getEmail(),account.get().getPhoneNumber());
+            TeacherAccountDetail accountDetail=new TeacherAccountDetail(account.get().getUserId(),account.get().getFullName(),account.get().getEmail(),account.get().getPhoneNumber(),account.get().getType());
             return new ResponseEntity<TeacherAccountDetail>(accountDetail,HttpStatus.OK);
         }
         System.out.println("hello");

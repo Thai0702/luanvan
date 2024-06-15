@@ -3,6 +3,7 @@ package com.luanvan.luanvan.groupService.controller;
 
 
 import com.luanvan.luanvan.accountservice.model.Account;
+import com.luanvan.luanvan.accountservice.model.Role;
 import com.luanvan.luanvan.groupService.model.Group;
 import com.luanvan.luanvan.groupService.model.GroupMember;
 import com.luanvan.luanvan.groupService.model.Student;
@@ -13,6 +14,7 @@ import com.luanvan.luanvan.groupService.wrapper.GroupMemberInfo;
 import com.luanvan.luanvan.groupService.wrapper.MemberInfo;
 import com.luanvan.luanvan.securityService.model.RegisterRequest;
 import com.luanvan.luanvan.securityService.service.AuthenticationService;
+import com.luanvan.luanvan.securityService.service.JwtService;
 import com.luanvan.luanvan.subjectclassservice.model.SubjectClass;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,26 +27,28 @@ import java.util.List;
 @CrossOrigin
 public class GroupController {
     private final GroupMemberRepository groupMemberRepository;
+    private final JwtService jwtService;
     GroupService groupService;
     AuthenticationService authenticationService;
 
-    public GroupController(GroupService groupService, AuthenticationService authenticationService, GroupMemberRepository groupMemberRepository) {
+    public GroupController(GroupService groupService, AuthenticationService authenticationService, GroupMemberRepository groupMemberRepository, JwtService jwtService) {
         this.groupService = groupService;
         this.authenticationService = authenticationService;
         this.groupMemberRepository = groupMemberRepository;
+        this.jwtService = jwtService;
     }
     @GetMapping("/api-admin/getAll/group")
     public ResponseEntity<List<Group>> showGroup(){
         return  ResponseEntity.ok().body(groupService.findAllGroup());
     }
     //tạo nhóm bằng danh sách
-    @PostMapping("/api/class/create-groups")
+    @PostMapping("/api-gv/class/create-groups")
     public ResponseEntity<String>createGroupFromList(@RequestBody List<GroupInfo> groupInfoList){
         return groupService.createGroupForClass(groupInfoList);
         //return new ResponseEntity<String>(groupService.createGroupForClass(groupInfoList),HttpStatus.OK);
     }
     //thêm thành viên theo danh sách
-    @PostMapping("/api/class/add-member")
+    @PostMapping("/api-gv/class/add-member")
     public ResponseEntity<String>addMemberIntoGroup(@RequestBody List<MemberInfo> memberList){
         return groupService.addGroupMemberFromList(memberList);
     }
@@ -56,8 +60,8 @@ public class GroupController {
     }
     //tao mot group
     @PostMapping("/api/class/create-a-group")
-    public ResponseEntity<String>createSingleGroup(@RequestBody GroupInfo groupInfo/*,@RequestHeader(value = "Authorization")String requestToken*/){
-        //groupInfo.setLeaderId(authenticationService.getUserIdFromToken(requestToken));
+    public ResponseEntity<String>createSingleGroup(@RequestBody GroupInfo groupInfo,@RequestHeader(value = "Authorization")String requestToken){
+        groupInfo.setLeaderId(authenticationService.getUserIdFromToken(requestToken));
         return groupService.createSingleGroup(groupInfo);
     }
 //    //Them 1 thanh vien vào nhóm
@@ -65,11 +69,14 @@ public class GroupController {
 //    public ResponseEntity<String>addOneMemberIntoGroup(@PathVariable Integer classId,@PathVariable Integer groupId,@PathVariable Integer accountId){
 //        return new ResponseEntity<>(HttpStatus.OK );
 //    }
-@PostMapping("/api/class/group/add-member/{classId}/{groupId}/{accountId}")
+@PostMapping("/api/class/group/add-member/{classId}/{groupId}")
 public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classId,
                                                     @PathVariable Integer groupId,
-                                                    @PathVariable Integer accountId) {
+                                                    @RequestHeader(value = "Authorization") String token) {
     try {
+        // Giải mã token để lấy accountId
+        int accountId = authenticationService.getUserIdFromToken(token);
+
         // Kiểm tra xem thành viên đã tồn tại trong nhóm chưa
         if (groupMemberRepository.existsByGroupIdAndMemberId(groupId, accountId)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

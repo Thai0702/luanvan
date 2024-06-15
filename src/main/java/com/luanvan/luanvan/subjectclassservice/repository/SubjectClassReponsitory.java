@@ -14,5 +14,4 @@ public interface SubjectClassReponsitory extends JpaRepository<SubjectClass,Inte
     @Query("SELECT sc FROM SubjectClass sc JOIN Student sl ON sc.subjectClassId = sl.classId WHERE sl.studentId = ?1")
     List<SubjectClass> findByStudentId(int studentId);
     Optional<SubjectClass> findByInviteCode(String inviteCode);
-
 }
