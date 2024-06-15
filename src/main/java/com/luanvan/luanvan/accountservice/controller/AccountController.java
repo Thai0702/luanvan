@@ -51,27 +51,16 @@ public class AccountController {
         }
     }
     // tao account bang file excel
-<<<<<<< HEAD
-=======
+
 
     @PostMapping("/class/excel/{classId}")
     public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
         return accountService.importAccoutFromExcel(classId,multipartFile);
     }
 
->>>>>>> fa387723dd136da103348c7ada2dda5accc30e1e
-//    @PostMapping("/class/excel/{classId}")
-//    public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
-//        return accountService.importAccoutFromExcel(classId,multipartFile);
-//    }
-<<<<<<< HEAD
-=======
 
-   //  tao account bang file excel
-   // @PostMapping("/class/excel/{classId}")
-   //  public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
-   //     return accountService.importAccoutFromExcel(classId,multipartFile);
-   // }
 
->>>>>>> fa387723dd136da103348c7ada2dda5accc30e1e
+
+
+
 }
