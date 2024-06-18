@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface StudentRepository extends JpaRepository<StudentList,Integer> {
-
     public List<StudentList>getStudentsByClassId(Integer classId);
     public List<StudentList>getStudentsByStudentId(Integer studentId);
     List<StudentList> findByStudentId(Integer studentId);

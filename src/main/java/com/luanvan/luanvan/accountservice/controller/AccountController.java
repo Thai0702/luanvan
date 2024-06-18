@@ -13,6 +13,8 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
+
+@RequestMapping("/api-gv/account")
 @RequestMapping("/api-admin/account")
 public class AccountController {
     @Autowired
@@ -49,8 +51,23 @@ public class AccountController {
         }
     }
     // tao account bang file excel
+<<<<<<< HEAD
 //    @PostMapping("/class/excel/{classId}")
 //    public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
 //        return accountService.importAccoutFromExcel(classId,multipartFile);
 //    }
+=======
+
+
+    @PostMapping("/class/excel/{classId}")
+    public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
+        return accountService.importAccoutFromExcel(classId,multipartFile);
+    }
+
+
+
+
+
+
+>>>>>>> 5f1df0a7834e723c73812abb82fdff3c4d472767
 }

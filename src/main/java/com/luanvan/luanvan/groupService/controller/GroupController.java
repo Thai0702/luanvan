@@ -33,10 +33,7 @@ public class GroupController {
         this.groupMemberRepository = groupMemberRepository;
         this.jwtService = jwtService;
     }
-    @GetMapping("/api-admin/getAll/group")
-    public ResponseEntity<List<Group>> showGroup(){
-        return  ResponseEntity.ok().body(groupService.findAllGroup());
-    }
+
     //tạo nhóm bằng danh sách
     @PostMapping("/api-gv/class/create-groups")
     public ResponseEntity<String>createGroupFromList(@RequestBody List<GroupInfo> groupInfoList){
@@ -92,7 +89,7 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
     }
 }
     //lay danh sach lop da join
-    @GetMapping("/api/user/{userId}/joined-class")
+    @GetMapping("/api/api-gv/user/{userId}/joined-class")
     public ResponseEntity<?>getJoinedClassOfUser(@PathVariable Integer userId){
         return groupService.findJoinedClassById(userId);
     }
@@ -122,7 +119,7 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
         return new ResponseEntity<>(HttpStatus.OK);
     }
     // xoa nhom
-    @DeleteMapping("/api/group/delete/{groupId}")
+    @DeleteMapping("/api/group/{groupId}")
     public ResponseEntity<String> deleteGroupById(@PathVariable Integer groupId) {
         try {
             groupService.deleteGroupById(groupId);
@@ -132,11 +129,11 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
         }
     }
     //sua nhom
-    @PutMapping("/api/group/update/{groupId}")
-    public ResponseEntity<String> updateGroup(@PathVariable Integer groupId, @RequestBody Group group) {
+    @PutMapping("/api/group/{groupId}")
+    public ResponseEntity<String> updateGroup(@PathVariable Integer id, @RequestBody Group group) {
         try {
-            Group gr = groupService.updateGroup(groupId, group);
-            return ResponseEntity.ok("Đã sửa nhóm có id là " + groupId);
+            Group gr = groupService.updateGroup(id, group);
+            return ResponseEntity.ok("Đã sửa nhóm có id là " + id);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Lỗi trong quá trình sửa");
         }
@@ -189,4 +186,5 @@ public ResponseEntity<?> studentJoinGroup(@PathVariable Integer classId, @PathVa
     }
 
     //  delete member in group
+
 }
