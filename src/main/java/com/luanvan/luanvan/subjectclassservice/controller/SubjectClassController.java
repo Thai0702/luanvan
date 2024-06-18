@@ -28,24 +28,9 @@ public class SubjectClassController {
         this.authenticationService = authenticationService;
         this.groupService = groupService;
     }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 5f1df0a7834e723c73812abb82fdff3c4d472767
     @GetMapping("/api-gv/class/get/{classId}")
     public ResponseEntity<?> get1SubjectClassById(@PathVariable Integer classId) {
         Optional<SubjectClass> subjectclass = subjectClassService.findById(classId);
-=======
-    @GetMapping("/get/{classId}")
-    public ResponseEntity<?> get1SubjectClassById(@PathVariable Integer id) {
-        Optional<SubjectClass> subjectclass = subjectClassService.findById(id);
->>>>>>> fa387723dd136da103348c7ada2dda5accc30e1e
-        if (subjectclass.isPresent()) {
-            return ResponseEntity.ok(subjectclass.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NOT FOUND");
-        }
-    }
 
     @GetMapping
     public ResponseEntity<List<SubjectClass>> showSubjectClass() {
@@ -91,15 +76,16 @@ public class SubjectClassController {
     public List<SubjectClass> getClassByStudentId(@PathVariable Integer studentId){
         return subjectClassService.getSubjectClassesByStudentId(studentId);
     }
-<<<<<<< HEAD
+
     // tao account bang file excel
     @PostMapping("/api-gv/class/excel/{classId}")
     public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
         return accountService.importAccoutFromExcel(classId,multipartFile);
     }
-<<<<<<< HEAD
-=======
-=======
->>>>>>> fa387723dd136da103348c7ada2dda5accc30e1e
->>>>>>> 5f1df0a7834e723c73812abb82fdff3c4d472767
+
+    @PostMapping("/api-admin/class/excel")
+    public String importAccFromExcelAddAc(@RequestParam("file") MultipartFile multipartFile) {
+        return accountService.importAccoutFromExcelAdmin(multipartFile);
+    }
+
 }

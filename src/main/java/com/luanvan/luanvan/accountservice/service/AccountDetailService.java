@@ -8,7 +8,7 @@ import com.luanvan.luanvan.accountservice.repository.StudentDetailRepository;
 import com.luanvan.luanvan.accountservice.wrapper.AdminAccountDetail;
 import com.luanvan.luanvan.accountservice.wrapper.StudentAccountDetail;
 import com.luanvan.luanvan.accountservice.wrapper.TeacherAccountDetail;
-import com.luanvan.luanvan.groupService.model.Student;
+import com.luanvan.luanvan.groupService.model.StudentList;
 import com.luanvan.luanvan.groupService.repository.StudentRepository;
 import com.luanvan.luanvan.groupService.wrapper.StudentInfo;
 import jakarta.transaction.Transactional;
@@ -63,8 +63,8 @@ public class AccountDetailService {
     }
     public List<StudentInfo>getStudentInfoOfClass(int classId){
         List<StudentInfo>result=new ArrayList<>();
-        List<Student>studentList=studentRepository.getStudentsByClassId(classId);
-        for(Student student:studentList){
+        List<StudentList>studentList=studentRepository.getStudentsByClassId(classId);
+        for(StudentList student:studentList){
             StudentInfo studentInfo=new StudentInfo();
             StudentAccountDetail accountDetail=getStudentAccountDetail(student.getStudentId());
             studentInfo.setFullName(accountDetail.getFullName());
