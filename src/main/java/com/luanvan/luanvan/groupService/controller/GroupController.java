@@ -2,17 +2,13 @@ package com.luanvan.luanvan.groupService.controller;
 
 
 
-import com.luanvan.luanvan.accountservice.model.Account;
-import com.luanvan.luanvan.accountservice.model.Role;
 import com.luanvan.luanvan.groupService.model.Group;
 import com.luanvan.luanvan.groupService.model.GroupMember;
-import com.luanvan.luanvan.groupService.model.Student;
 import com.luanvan.luanvan.groupService.repository.GroupMemberRepository;
 import com.luanvan.luanvan.groupService.service.GroupService;
 import com.luanvan.luanvan.groupService.wrapper.GroupInfo;
 import com.luanvan.luanvan.groupService.wrapper.GroupMemberInfo;
 import com.luanvan.luanvan.groupService.wrapper.MemberInfo;
-import com.luanvan.luanvan.securityService.model.RegisterRequest;
 import com.luanvan.luanvan.securityService.service.AuthenticationService;
 import com.luanvan.luanvan.securityService.service.JwtService;
 import com.luanvan.luanvan.subjectclassservice.model.SubjectClass;
@@ -100,7 +96,6 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
     public ResponseEntity<?>getJoinedClassOfUser(@PathVariable Integer userId){
         return groupService.findJoinedClassById(userId);
     }
-
     //Lay danh sach nhóm của lớp do
     @GetMapping("/api-gv/classId/group-list/{classId}")
     public ResponseEntity<List<Group>>getGroupListOfClass(@PathVariable Integer classId){

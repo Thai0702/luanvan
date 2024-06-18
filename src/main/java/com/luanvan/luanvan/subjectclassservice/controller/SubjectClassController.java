@@ -94,4 +94,9 @@ public class SubjectClassController {
     public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
         return accountService.importAccoutFromExcel(classId,multipartFile);
     }
+//    // add account
+    @PostMapping("/api-admin/class/excel")
+    public String importAccFromExcelAddAc(@RequestParam("file") MultipartFile multipartFile) {
+        return accountService.importAccoutFromExcelAdmin(multipartFile);
+    }
 }

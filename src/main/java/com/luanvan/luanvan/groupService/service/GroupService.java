@@ -8,14 +8,13 @@ import com.luanvan.luanvan.accountservice.service.AccountDetailService;
 import com.luanvan.luanvan.accountservice.wrapper.StudentAccountDetail;
 import com.luanvan.luanvan.groupService.model.Group;
 import com.luanvan.luanvan.groupService.model.GroupMember;
-import com.luanvan.luanvan.groupService.model.Student;
+import com.luanvan.luanvan.groupService.model.StudentList;
 import com.luanvan.luanvan.groupService.repository.GroupMemberRepository;
 import com.luanvan.luanvan.groupService.repository.GroupRepository;
 import com.luanvan.luanvan.groupService.repository.StudentRepository;
 import com.luanvan.luanvan.groupService.wrapper.GroupInfo;
 import com.luanvan.luanvan.groupService.wrapper.GroupMemberInfo;
 import com.luanvan.luanvan.groupService.wrapper.MemberInfo;
-import com.luanvan.luanvan.securityService.model.RegisterRequest;
 import com.luanvan.luanvan.subjectclassservice.model.SubjectClass;
 import com.luanvan.luanvan.subjectclassservice.repository.SubjectClassReponsitory;
 import jakarta.persistence.EntityNotFoundException;
@@ -137,7 +136,7 @@ public class GroupService {
 
 
     public void assignStudentsToRandomGroups ( int classId, int numberOfGroup, int memberPerGroup){
-            List<Student> studentList = studentRepository.getStudentsByClassId(classId);
+            List<StudentList> studentList = studentRepository.getStudentsByClassId(classId);
             for (int i = 1; i <= numberOfGroup; i++) {
                 String groupName = "Nhóm " + i;
                 Group group = new Group(0, classId, groupName);
@@ -147,7 +146,7 @@ public class GroupService {
                         break;
                     }
                     int index = randomNumber(studentList.size());
-                    Student student = studentList.get(index);
+                    StudentList student = studentList.get(index);
                     GroupMember newMember = new GroupMember(newGroup.getGroupId(), student.getStudentId());
                     groupMemberRepository.save(newMember);
                     studentList.remove(student);
@@ -182,9 +181,9 @@ public class GroupService {
     }
 
     public ResponseEntity<?>findJoinedClassById(int userId){
-        List<Student>joinedList=studentRepository.findByStudentId(userId);
+        List<StudentList>joinedList=studentRepository.findByStudentId(userId);
         List<SubjectClass>result=new ArrayList<>();
-        for (Student joined:joinedList){
+        for (StudentList joined:joinedList){
             Optional<SubjectClass> joinedClass =subjectClassReponsitory.findById(joined.getClassId());
             joinedClass.ifPresent(result::add);
         }
@@ -251,13 +250,32 @@ public class GroupService {
             if (alreadyJoined) {
                 return new ResponseEntity<>("Cannot join, account already in class", HttpStatus.BAD_REQUEST);
             }
-            Student student = new Student(subjectClass.getSubjectClassId(), accountId);
-            studentRepository.save(student);  // Assumption: you have a repository for Student
+            StudentList studentList = new StudentList(subjectClass.getSubjectClassId(), accountId);
+            studentRepository.save(studentList);  // Assumption: you have a repository for Student
             return new ResponseEntity<>("Successfully joined the class" +"User"+ accountId,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
+    // tearch add student in class
+//    public ResponseEntity<?> addStudentinClass(@RequestParam String studentId, @RequestParam int accountId) {
+//        Optional<com.luanvan.luanvan.subjectclassservice.model.Student> studentopt = subjectClassReponsitory.findByStudentId(studentId);
+//        if (studentopt.isPresent()) {
+//            com.luanvan.luanvan.subjectclassservice.model.Student student= studentopt.get();
+//            Optional<Account> accountOpt = accountRepository.findById(accountId);
+//            if (accountOpt.isEmpty()) {
+//                return new ResponseEntity<>("Account not found", HttpStatus.NOT_FOUND);
+//            }
+//            // Check if the account has already joined the class
+//            boolean alreadyJoined = studentRepository.existsByClassIdAndStudentId(student.getSubjectClassId(), accountId);
+//            if (alreadyJoined) {
+//                return new ResponseEntity<>("Cannot join, account already in class", HttpStatus.BAD_REQUEST);
+//            }
+//            Student studentlist = new Student(student.getSubjectClassId(), accountId);
+//            studentRepository.save(studentlist);  // Assumption: you have a repository for Student
+//            return new ResponseEntity<>("Successfully joined the class" +"User"+ accountId,HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
 //Tao invite CODE
     public String createInviteCode() {
         String source = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
