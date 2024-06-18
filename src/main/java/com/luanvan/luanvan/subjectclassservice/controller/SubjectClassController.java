@@ -28,64 +28,69 @@ public class SubjectClassController {
         this.authenticationService = authenticationService;
         this.groupService = groupService;
     }
+
     @GetMapping("/api-gv/class/get/{classId}")
     public ResponseEntity<?> get1SubjectClassById(@PathVariable Integer classId) {
         Optional<SubjectClass> subjectclass = subjectClassService.findById(classId);
 
-    @GetMapping
-    public ResponseEntity<List<SubjectClass>> showSubjectClass() {
-        return ResponseEntity.ok().body(subjectClassService.findAll());
-    }
-    @PostMapping
-    public ResponseEntity<SubjectClass> createSubjectClass(@RequestBody SubjectClass sc,@RequestHeader(value = "Authorization")String requestToken) {
-        if(authenticationService.getUserRole(requestToken)== Role.GV){
-            sc.setCreatedBy(authenticationService.getUserIdFromToken(requestToken));
-            //sc.setFullName(authenticationService.getFullNameFromToken(requestToken));
-            String inviteCode = groupService.createInviteCode(); // Gọi hàm createInviteCode() để tạo mã mới
-            sc.setInviteCode(inviteCode); // Đặt mã vào đối tượng SubjectClass
-            SubjectClass subjectClass = subjectClassService.save(sc);
-            return ResponseEntity.ok(subjectClass);
+        @GetMapping
+        public ResponseEntity<List<SubjectClass>> showSubjectClass () {
+            return ResponseEntity.ok().body(subjectClassService.findAll());
         }
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-
-    @DeleteMapping("/delete/{classId}")
-    public ResponseEntity<String> deleteSubjectClassById(@PathVariable Integer id) {
-        try {
-            subjectClassService.deleteById(id);
-            return ResponseEntity.ok("Đã xóa lớp môn học có id là " + id);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Lỗi trong quá trình xóa");
+        @PostMapping
+        public ResponseEntity<SubjectClass> createSubjectClass (@RequestBody SubjectClass
+        sc, @RequestHeader(value = "Authorization") String requestToken){
+            if (authenticationService.getUserRole(requestToken) == Role.GV) {
+                sc.setCreatedBy(authenticationService.getUserIdFromToken(requestToken));
+                //sc.setFullName(authenticationService.getFullNameFromToken(requestToken));
+                String inviteCode = groupService.createInviteCode(); // Gọi hàm createInviteCode() để tạo mã mới
+                sc.setInviteCode(inviteCode); // Đặt mã vào đối tượng SubjectClass
+                SubjectClass subjectClass = subjectClassService.save(sc);
+                return ResponseEntity.ok(subjectClass);
+            }
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-    }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateSubjectClass(@PathVariable Integer id, @RequestBody SubjectClass subjectClass) {
-        try {
-            SubjectClass sc = subjectClassService.updateSc(id, subjectClass);
-            return ResponseEntity.ok("Đã sửa lớp môn học có id là " + id);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Lỗi trong quá trình cập nhật ");
+        @DeleteMapping("/delete/{classId}")
+        public ResponseEntity<String> deleteSubjectClassById (@PathVariable Integer id){
+            try {
+                subjectClassService.deleteById(id);
+                return ResponseEntity.ok("Đã xóa lớp môn học có id là " + id);
+            } catch (Exception e) {
+                return ResponseEntity.status(500).body("Lỗi trong quá trình xóa");
+            }
         }
-    }
-    @GetMapping("/createdBy/{userId}")
-    public List<SubjectClass> getClassCreatedBy(@PathVariable Integer userId) {
-        return subjectClassService.getClassByCreatedBy(userId);
-    }
-    @GetMapping("/studentId/{studentId}")
-    public List<SubjectClass> getClassByStudentId(@PathVariable Integer studentId){
-        return subjectClassService.getSubjectClassesByStudentId(studentId);
-    }
 
-    // tao account bang file excel
-    @PostMapping("/api-gv/class/excel/{classId}")
-    public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
-        return accountService.importAccoutFromExcel(classId,multipartFile);
-    }
+        @PutMapping("/update/{id}")
+        public ResponseEntity<String> updateSubjectClass (@PathVariable Integer id, @RequestBody SubjectClass
+        subjectClass){
+            try {
+                SubjectClass sc = subjectClassService.updateSc(id, subjectClass);
+                return ResponseEntity.ok("Đã sửa lớp môn học có id là " + id);
+            } catch (Exception e) {
+                return ResponseEntity.status(500).body("Lỗi trong quá trình cập nhật ");
+            }
+        }
+        @GetMapping("/createdBy/{userId}")
+        public List<SubjectClass> getClassCreatedBy (@PathVariable Integer userId){
+            return subjectClassService.getClassByCreatedBy(userId);
+        }
+        @GetMapping("/studentId/{studentId}")
+        public List<SubjectClass> getClassByStudentId (@PathVariable Integer studentId){
+            return subjectClassService.getSubjectClassesByStudentId(studentId);
+        }
 
-    @PostMapping("/api-admin/class/excel")
-    public String importAccFromExcelAddAc(@RequestParam("file") MultipartFile multipartFile) {
-        return accountService.importAccoutFromExcelAdmin(multipartFile);
-    }
+        // tao account bang file excel
+        @PostMapping("/api-gv/class/excel/{classId}")
+        public String importAccountFromExcel (@PathVariable Integer classId, @RequestParam("file") MultipartFile
+        multipartFile){
+            return accountService.importAccoutFromExcel(classId, multipartFile);
+        }
 
+        @PostMapping("/api-admin/class/excel")
+        public String importAccFromExcelAddAc (@RequestParam("file") MultipartFile multipartFile){
+            return accountService.importAccoutFromExcelAdmin(multipartFile);
+        }
+
+    }
 }

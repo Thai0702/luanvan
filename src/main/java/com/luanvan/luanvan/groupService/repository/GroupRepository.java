@@ -11,19 +11,9 @@ import java.util.Optional;
 @Repository
 public interface GroupRepository extends JpaRepository<Group,Integer> {
     List<Group> findAllByClassId(Integer classId);
-<<<<<<< HEAD
-    List<Group> findGroupByGroupName(String groupName);
-=======
-<<<<<<< HEAD
-    List<Group> findGroupByGroupName(String groupName);
-=======
-
-    Group findGroupByGroupName(String groupName);
 
     List<Group> findGroupByGroupName(String groupName);
 
->>>>>>> fa387723dd136da103348c7ada2dda5accc30e1e
->>>>>>> 5f1df0a7834e723c73812abb82fdff3c4d472767
     Optional<Group> findByGroupIdAndClassId(Integer groupId, Integer classId);  // New method to find group by groupId and classId
     boolean existsByGroupNameAndClassId(String groupName, Integer classId);
 }

@@ -7,15 +7,10 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.sql.Time;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 
 import java.sql.Timestamp;
 
->>>>>>> fa387723dd136da103348c7ada2dda5accc30e1e
->>>>>>> 5f1df0a7834e723c73812abb82fdff3c4d472767
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
