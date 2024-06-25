@@ -1,6 +1,7 @@
 package com.luanvan.luanvan.accountservice.wrapper;
 
 
+import com.luanvan.luanvan.accountservice.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,6 @@ public class StudentAccountDetail {
     private String studentId;
     private String studentClass;
     private String accountEmail;
-    private String phoneNumber;
+   private String phoneNumber;
+    private Role type;
 }
