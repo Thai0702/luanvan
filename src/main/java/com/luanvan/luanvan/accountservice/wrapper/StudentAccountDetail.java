@@ -17,6 +17,6 @@ public class StudentAccountDetail {
     private String studentId;
     private String studentClass;
     private String accountEmail;
-   private String phoneNumber;
+    private String phoneNumber;
     private Role type;
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
+
 @RequestMapping("/api-admin/account")
 public class AccountController {
     @Autowired
@@ -48,9 +49,21 @@ public class AccountController {
             return ResponseEntity.status(500).body("Lỗi trong quá trình cập nhật tài khoản");
         }
     }
-   //  tao account bang file excel
-   // @PostMapping("/class/excel/{classId}")
-   //  public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
-   //     return accountService.importAccoutFromExcel(classId,multipartFile);
-   // }
+    // tao account bang file excel
+//    @PostMapping("/class/excel/{classId}")
+//    public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
+//        return accountService.importAccoutFromExcel(classId,multipartFile);
+//    }
+
+
+
+    @PostMapping("/class/excel/{classId}")
+    public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
+        return accountService.importAccoutFromExcel(classId,multipartFile);
+    }
+
+
+
+
+
 }

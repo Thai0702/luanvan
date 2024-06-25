@@ -43,7 +43,11 @@ public class ProjectService {
         project.setCreatedAt(timestamp);
 
         project.setExpiredDay(formData.getExpiredDay());
+
+
         project.setExpiredTime(formData.getFormattedExpiredTime());
+
+        project.setExpiredTime(String.valueOf(formData.getFormattedExpiredTime()));
         projectRepository.save(project);
         return "Created !";
     }

@@ -5,16 +5,16 @@ package com.luanvan.luanvan.groupService.controller;
 import com.luanvan.luanvan.accountservice.model.Account;
 import com.luanvan.luanvan.accountservice.model.Role;
 import com.luanvan.luanvan.accountservice.model.StudentRequestBody;
+
 import com.luanvan.luanvan.groupService.model.Group;
 import com.luanvan.luanvan.groupService.model.GroupMember;
-import com.luanvan.luanvan.groupService.model.Student;
 import com.luanvan.luanvan.groupService.repository.GroupMemberRepository;
 import com.luanvan.luanvan.groupService.service.GroupService;
 import com.luanvan.luanvan.groupService.wrapper.GroupInfo;
 import com.luanvan.luanvan.groupService.wrapper.GroupMemberInfo;
 import com.luanvan.luanvan.groupService.wrapper.MemberInfo;
-import com.luanvan.luanvan.securityService.model.RegisterRequest;
 import com.luanvan.luanvan.securityService.service.AuthenticationService;
+import com.luanvan.luanvan.securityService.service.JwtService;
 import com.luanvan.luanvan.subjectclassservice.model.SubjectClass;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,20 +27,19 @@ import java.util.List;
 @CrossOrigin
 public class GroupController {
     private final GroupMemberRepository groupMemberRepository;
+    private final JwtService jwtService;
     GroupService groupService;
     AuthenticationService authenticationService;
 
-    public GroupController(GroupService groupService, AuthenticationService authenticationService, GroupMemberRepository groupMemberRepository) {
+    public GroupController(GroupService groupService, AuthenticationService authenticationService, GroupMemberRepository groupMemberRepository, JwtService jwtService) {
         this.groupService = groupService;
         this.authenticationService = authenticationService;
         this.groupMemberRepository = groupMemberRepository;
+        this.jwtService = jwtService;
     }
-    @GetMapping("/api-admin/getAll/group")
-    public ResponseEntity<List<Group>> showGroup(){
-        return  ResponseEntity.ok().body(groupService.findAllGroup());
-    }
+
     //tạo nhóm bằng danh sách
-    @PostMapping("/api/class/create-groups")
+    @PostMapping("/api-gv/class/create-groups")
     public ResponseEntity<String>createGroupFromList(@RequestBody List<GroupInfo> groupInfoList){
         return groupService.createGroupForClass(groupInfoList);
         //return new ResponseEntity<String>(groupService.createGroupForClass(groupInfoList),HttpStatus.OK);
@@ -58,20 +57,19 @@ public class GroupController {
     }
     //tao mot group
     @PostMapping("/api/class/create-a-group")
-    public ResponseEntity<String>createSingleGroup(@RequestBody GroupInfo groupInfo/*,@RequestHeader(value = "Authorization")String requestToken*/){
-        //groupInfo.setLeaderId(authenticationService.getUserIdFromToken(requestToken));
+    public ResponseEntity<String>createSingleGroup(@RequestBody GroupInfo groupInfo,@RequestHeader(value = "Authorization")String requestToken){
+        groupInfo.setLeaderId(authenticationService.getUserIdFromToken(requestToken));
         return groupService.createSingleGroup(groupInfo);
     }
-//    //Them 1 thanh vien vào nhóm
-//    @PostMapping("/api/class/group/add-member/{classId}/{groupId}/{accountId}")
-//    public ResponseEntity<String>addOneMemberIntoGroup(@PathVariable Integer classId,@PathVariable Integer groupId,@PathVariable Integer accountId){
-//        return new ResponseEntity<>(HttpStatus.OK );
-//    }
-@PostMapping("/api/class/group/add-member/{classId}/{groupId}/{accountId}")
+
+@PostMapping("/api/class/group/add-member/{classId}/{groupId}")
 public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classId,
                                                     @PathVariable Integer groupId,
-                                                    @PathVariable Integer accountId) {
+                                                    @RequestHeader(value = "Authorization") String token) {
     try {
+        // Giải mã token để lấy accountId
+        int accountId = authenticationService.getUserIdFromToken(token);
+
         // Kiểm tra xem thành viên đã tồn tại trong nhóm chưa
         if (groupMemberRepository.existsByGroupIdAndMemberId(groupId, accountId)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -91,11 +89,10 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
     }
 }
     //lay danh sach lop da join
-    @GetMapping("/api/user/{userId}/joined-class")
+    @GetMapping("/api/api-gv/user/{userId}/joined-class")
     public ResponseEntity<?>getJoinedClassOfUser(@PathVariable Integer userId){
         return groupService.findJoinedClassById(userId);
     }
-
     //Lay danh sach nhóm của lớp do
     @GetMapping("/api-gv/classId/group-list/{classId}")
     public ResponseEntity<List<Group>>getGroupListOfClass(@PathVariable Integer classId){
@@ -122,7 +119,7 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
         return new ResponseEntity<>(HttpStatus.OK);
     }
     // xoa nhom
-    @DeleteMapping("/api/group/delete/{groupId}")
+    @DeleteMapping("/api/group/{groupId}")
     public ResponseEntity<String> deleteGroupById(@PathVariable Integer groupId) {
         try {
             groupService.deleteGroupById(groupId);
@@ -132,24 +129,15 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
         }
     }
     //sua nhom
-    @PutMapping("/api/group/update/{groupId}")
-    public ResponseEntity<String> updateGroup(@PathVariable Integer groupId, @RequestBody Group group) {
+    @PutMapping("/api/group/{groupId}")
+    public ResponseEntity<String> updateGroup(@PathVariable Integer id, @RequestBody Group group) {
         try {
-            Group gr = groupService.updateGroup(groupId, group);
-            return ResponseEntity.ok("Đã sửa nhóm có id là " + groupId);
+            Group gr = groupService.updateGroup(id, group);
+            return ResponseEntity.ok("Đã sửa nhóm có id là " + id);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Lỗi trong quá trình sửa");
         }
     }
-//    //cho sinh vien join group
-//    @PostMapping("/api/class/{classId}/group/{groupId}/join-group")
-//    public ResponseEntity<?>studentJoinGroup(@PathVariable Integer classId,@PathVariable Integer groupId,@RequestHeader(value = "Authorization")String token){
-//        int accountId=authenticationService.getUserIdFromToken(token);
-//        if(accountId!=0){
-//            return groupService.studentJoinGroup(accountId,classId,groupId);
-//        }
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
 @PostMapping("/api/class/{classId}/group/{groupId}/join-group")
 public ResponseEntity<?> studentJoinGroup(@PathVariable Integer classId, @PathVariable Integer groupId, @RequestHeader(value = "Authorization") String token) {
     int accountId = authenticationService.getUserIdFromToken(token);
@@ -199,4 +187,5 @@ public ResponseEntity<?> studentJoinGroup(@PathVariable Integer classId, @PathVa
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     //  delete member in group
+
 }

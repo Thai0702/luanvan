@@ -20,14 +20,13 @@ public class SecurityConfig {
     private final UserDetailsServiceImp userDetailsServiceImp;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     //Danh sach duong dan chi GV dc phep truy cap
- private static final String[] GV_ACCESS={
-            "/api-gv/"
+    private static final String[] GV_ACCESS={
+            "/api-gv/**"
     };
     //TUONG TU NHU TREN NHUNG LA ADMIN
     private static final String[] ADMIN_ACCESS={
-            "/api-admin/"
+            "/api-admin/**"
     };
-
     public SecurityConfig(UserDetailsServiceImp userDetailsServiceImp, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsServiceImp = userDetailsServiceImp;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
@@ -37,10 +36,10 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/api/authenticate/**","**")
+                        req->req.requestMatchers("/api/authenticate/**","/**")
                                 .permitAll()
                                 .requestMatchers(GV_ACCESS).hasAnyAuthority("GV","ADMIN")
-                                .requestMatchers(ADMIN_ACCESS).hasAnyAuthority("ADMIN")
+                                .requestMatchers(ADMIN_ACCESS).hasAnyAuthority("GV","ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailsServiceImp)
