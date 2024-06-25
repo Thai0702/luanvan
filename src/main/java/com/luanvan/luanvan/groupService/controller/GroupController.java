@@ -3,6 +3,8 @@ package com.luanvan.luanvan.groupService.controller;
 
 
 import com.luanvan.luanvan.accountservice.model.Account;
+import com.luanvan.luanvan.accountservice.model.Role;
+import com.luanvan.luanvan.accountservice.model.StudentRequestBody;
 import com.luanvan.luanvan.groupService.model.Group;
 import com.luanvan.luanvan.groupService.model.GroupMember;
 import com.luanvan.luanvan.groupService.model.Student;
@@ -44,7 +46,7 @@ public class GroupController {
         //return new ResponseEntity<String>(groupService.createGroupForClass(groupInfoList),HttpStatus.OK);
     }
     //thêm thành viên theo danh sách
-    @PostMapping("/api/class/add-member")
+    @PostMapping("/api-gv/class/add-member")
     public ResponseEntity<String>addMemberIntoGroup(@RequestBody List<MemberInfo> memberList){
         return groupService.addGroupMemberFromList(memberList);
     }
@@ -186,5 +188,15 @@ public ResponseEntity<?> studentJoinGroup(@PathVariable Integer classId, @PathVa
         return new ResponseEntity<List<GroupMemberInfo>>(students, HttpStatus.OK);
     }
 
+    @PostMapping("/api-gv/add-student/class/{classId}")
+    public ResponseEntity<?> addStudent(
+            @RequestBody StudentRequestBody requestBody, @PathVariable Integer classId,@RequestHeader(value = "Authorization")String requestToken) {
+        if(authenticationService.getUserRole(requestToken)== Role.GV){
+            String studentId = requestBody.getStudentId();
+            // Call your service method with studentId and classId
+            return groupService.addStudentInClass(studentId, classId);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
     //  delete member in group
 }
