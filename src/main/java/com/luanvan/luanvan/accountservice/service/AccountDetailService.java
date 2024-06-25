@@ -48,7 +48,6 @@ public class AccountDetailService {
                     account.getEmail(),
                     account.getPhoneNumber(),
                     account.getType());
-
             return accountDetail;
         }
         StudentDetail studentDetail=new StudentDetail(userId,"NOTFOUND","NOTFOUND");

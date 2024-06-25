@@ -3,7 +3,9 @@ package com.luanvan.luanvan.groupService.service;
 
 
 import com.luanvan.luanvan.accountservice.model.Account;
+import com.luanvan.luanvan.accountservice.model.StudentDetail;
 import com.luanvan.luanvan.accountservice.repository.AccountRepository;
+import com.luanvan.luanvan.accountservice.repository.StudentDetailRepository;
 import com.luanvan.luanvan.accountservice.service.AccountDetailService;
 import com.luanvan.luanvan.accountservice.wrapper.StudentAccountDetail;
 import com.luanvan.luanvan.groupService.model.Group;
@@ -39,6 +41,8 @@ public class GroupService {
     private StudentRepository studentRepository;
     private SubjectClassReponsitory subjectClassReponsitory;
     private AccountDetailService accountDetailService;
+    @Autowired
+    private StudentDetailRepository studentDetailRepository;
 
 
     public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, StudentRepository studentRepository, SubjectClassReponsitory subjectClassReponsitory, AccountDetailService accountDetailService) {
@@ -291,4 +295,29 @@ public class GroupService {
         return groupRepository.findAll();
     }
 
+
+    //add
+    public ResponseEntity<?> addStudentInClass(String studentId, int classId) {
+        System.out.println("ma sinh vien" + studentId);
+        Optional<StudentDetail> studentOp = studentDetailRepository.findByStudentId(studentId);
+        if (studentOp.isPresent()) {
+            StudentDetail studentDetail = studentOp.get();
+            System.out.println("ma sinh vien" + studentDetail);
+            int userId = studentDetail.getUserId();
+            System.out.println("ma sinh vien" + userId);
+            // Check if the student is already in the class
+            boolean alreadyAdded =studentRepository.existsByClassIdAndStudentId(classId, userId);
+            if (alreadyAdded) {
+                return new ResponseEntity<>("Cannot join, account already in class", HttpStatus.BAD_REQUEST);
+            }
+            Student student = new Student();
+            student.setClassId(classId);
+            student.setStudentId(userId);
+            studentRepository.save(student);
+            return new ResponseEntity<>("Student added successfully", HttpStatus.OK);
+        } else {
+            System.out.println("ma sinh vien" + studentId);
+            return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
+        }
+    }
 }

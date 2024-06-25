@@ -2,6 +2,10 @@ package com.luanvan.luanvan.groupService.controller;
 
 
 
+import com.luanvan.luanvan.accountservice.model.Account;
+import com.luanvan.luanvan.accountservice.model.Role;
+import com.luanvan.luanvan.accountservice.model.StudentRequestBody;
+
 import com.luanvan.luanvan.groupService.model.Group;
 import com.luanvan.luanvan.groupService.model.GroupMember;
 import com.luanvan.luanvan.groupService.repository.GroupMemberRepository;
@@ -57,11 +61,7 @@ public class GroupController {
         groupInfo.setLeaderId(authenticationService.getUserIdFromToken(requestToken));
         return groupService.createSingleGroup(groupInfo);
     }
-//    //Them 1 thanh vien vào nhóm
-//    @PostMapping("/api/class/group/add-member/{classId}/{groupId}/{accountId}")
-//    public ResponseEntity<String>addOneMemberIntoGroup(@PathVariable Integer classId,@PathVariable Integer groupId,@PathVariable Integer accountId){
-//        return new ResponseEntity<>(HttpStatus.OK );
-//    }
+
 @PostMapping("/api/class/group/add-member/{classId}/{groupId}")
 public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classId,
                                                     @PathVariable Integer groupId,
@@ -138,15 +138,6 @@ public ResponseEntity<String> addOneMemberIntoGroup(@PathVariable Integer classI
             return ResponseEntity.status(500).body("Lỗi trong quá trình sửa");
         }
     }
-//    //cho sinh vien join group
-//    @PostMapping("/api/class/{classId}/group/{groupId}/join-group")
-//    public ResponseEntity<?>studentJoinGroup(@PathVariable Integer classId,@PathVariable Integer groupId,@RequestHeader(value = "Authorization")String token){
-//        int accountId=authenticationService.getUserIdFromToken(token);
-//        if(accountId!=0){
-//            return groupService.studentJoinGroup(accountId,classId,groupId);
-//        }
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
 @PostMapping("/api/class/{classId}/group/{groupId}/join-group")
 public ResponseEntity<?> studentJoinGroup(@PathVariable Integer classId, @PathVariable Integer groupId, @RequestHeader(value = "Authorization") String token) {
     int accountId = authenticationService.getUserIdFromToken(token);
@@ -185,6 +176,16 @@ public ResponseEntity<?> studentJoinGroup(@PathVariable Integer classId, @PathVa
         return new ResponseEntity<List<GroupMemberInfo>>(students, HttpStatus.OK);
     }
 
+    @PostMapping("/api-gv/add-student/class/{classId}")
+    public ResponseEntity<?> addStudent(
+            @RequestBody StudentRequestBody requestBody, @PathVariable Integer classId,@RequestHeader(value = "Authorization")String requestToken) {
+        if(authenticationService.getUserRole(requestToken)== Role.GV){
+            String studentId = requestBody.getStudentId();
+            // Call your service method with studentId and classId
+            return groupService.addStudentInClass(studentId, classId);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
     //  delete member in group
 
 }

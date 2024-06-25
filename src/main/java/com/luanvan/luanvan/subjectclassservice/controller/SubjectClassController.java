@@ -28,7 +28,6 @@ public class SubjectClassController {
         this.authenticationService = authenticationService;
         this.groupService = groupService;
     }
-
     @GetMapping("/api-gv/class/get/{classId}")
     public ResponseEntity<?> get1SubjectClassById(@PathVariable Integer classId) {
         Optional<SubjectClass> subjectclass = subjectClassService.findById(classId);
