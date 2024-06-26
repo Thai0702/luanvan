@@ -4,6 +4,7 @@ package com.luanvan.luanvan.subjectclassservice.service;
 
 import com.luanvan.luanvan.accountservice.model.Account;
 import com.luanvan.luanvan.groupService.repository.StudentRepository;
+import com.luanvan.luanvan.groupService.service.GroupService;
 import com.luanvan.luanvan.subjectclassservice.model.SubjectClass;
 import com.luanvan.luanvan.subjectclassservice.repository.SubjectClassReponsitory;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,9 +25,8 @@ public class SubjectClassService  {
     SubjectClassReponsitory subjectClassReponsitory;
 
     StudentRepository studentRepository;
+
     GroupService groupService;
-
-
 
     public Optional<SubjectClass> findById(Integer classId) {
         return subjectClassReponsitory.findById(classId);
@@ -45,7 +46,7 @@ public class SubjectClassService  {
         subjectClassReponsitory.deleteById(subjectClassId);
     }
 
-   public SubjectClass updateSc(Integer subjectClassId, SubjectClass subjectClass){
+    public SubjectClass updateSc(Integer subjectClassId, SubjectClass subjectClass){
         SubjectClass sc = subjectClassReponsitory.findById(subjectClassId).orElseThrow(() -> new EntityNotFoundException("Khong co lop hoc voi id:"+subjectClassId));
         sc.setSubjectName(subjectClass.getSubjectName());
 //        sc.setCreatedBy(subjectClass.getCreatedBy());
