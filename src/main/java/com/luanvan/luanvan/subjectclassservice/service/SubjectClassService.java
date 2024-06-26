@@ -44,7 +44,7 @@ public class SubjectClassService  {
         subjectClassReponsitory.deleteById(subjectClassId);
     }
 
-    public SubjectClass updateSc(Integer subjectClassId, SubjectClass subjectClass){
+   public SubjectClass updateSc(Integer subjectClassId, SubjectClass subjectClass){
         SubjectClass sc = subjectClassReponsitory.findById(subjectClassId).orElseThrow(() -> new EntityNotFoundException("Khong co lop hoc voi id:"+subjectClassId));
         sc.setSubjectName(subjectClass.getSubjectName());
 //        sc.setCreatedBy(subjectClass.getCreatedBy());
@@ -54,12 +54,13 @@ public class SubjectClassService  {
         sc.setMemberPerGroup(subjectClass.getMemberPerGroup());
         sc.setGroupRegisterMethod(subjectClass.getGroupRegisterMethod());
         subjectClassReponsitory.save(sc);
-         //Luu group theo random
+        //Luu group theo random
         Optional<SubjectClass> subjectClass1=subjectClassReponsitory.findById(subjectClassId);
         if(subjectClass1.isPresent()&& Objects.equals(subjectClass1.get().getGroupRegisterMethod(), "RANDOM")){
             groupService.assignStudentsToRandomGroups(subjectClassId,subjectClass1.get().getNumberOfGroup(),subjectClass1.get().getMemberPerGroup());
         }
         return sc;
+
     }
     public List<SubjectClass> getClassByCreatedBy(Integer userId) {
         return subjectClassReponsitory.findByCreatedBy(userId);
