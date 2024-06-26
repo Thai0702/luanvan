@@ -23,6 +23,7 @@ public class SubjectClassService  {
     SubjectClassReponsitory subjectClassReponsitory;
 
     StudentRepository studentRepository;
+    GroupService groupService;
 
 
 
